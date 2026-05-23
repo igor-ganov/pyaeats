@@ -91,22 +91,24 @@ class GlassStoreExplorer extends LightWebComponent {
   }
 
   protected override afterRender(): void {
-    this.addEventListener('click', this.markMorphSource, { capture: true });
+    this.addEventListener('pointerdown', this.markMorphSource);
     this.addEventListener('click', this.onClick);
     this.addEventListener('input', this.onInput);
     this.update();
   }
 
   public disconnectedCallback(): void {
-    this.removeEventListener('click', this.markMorphSource, { capture: true });
+    this.removeEventListener('pointerdown', this.markMorphSource);
     this.removeEventListener('click', this.onClick);
     this.removeEventListener('input', this.onInput);
   }
 
   /**
-   * Capture-phase: name the clicked card just-in-time so the browser can morph
-   * its bounding box into `.gl__cover` on the detail page (container transform).
-   * Only one element ever carries the name, so there is zero idle perf cost.
+   * Name the to-be-clicked card on `pointerdown` (fires before `click`), so by
+   * the time Astro intercepts the click for View Transitions the card already
+   * carries `view-transition-name=card-expand` and the browser can morph its
+   * bounding box into `.gl__cover` on the detail page (container transform).
+   * Only one element ever carries the name → zero idle perf cost.
    */
   private readonly markMorphSource = (event: Event): void => {
     const target = event.target;
@@ -114,6 +116,10 @@ class GlassStoreExplorer extends LightWebComponent {
     if (target.closest('[data-fav]') !== null) return; // favourite toggle: not a navigation
     const card = target.closest<HTMLElement>('.gl__card');
     if (card === null) return;
+    // Clear any previously-marked card (cheap defensive cleanup before re-marking).
+    this.querySelectorAll<HTMLElement>('.gl__card').forEach((el) => {
+      if (el !== card) el.style.removeProperty('view-transition-name');
+    });
     card.style.setProperty('view-transition-name', 'card-expand');
   };
 
