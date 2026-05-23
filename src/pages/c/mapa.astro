@@ -1,0 +1,171 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ConceptNav from '~/components/shell/ConceptNav.astro';
+import { u } from '~/lib/url.ts';
+
+const pins = [
+  { top: '50%', left: '50%', kind: 'me', text: 'Tú' },
+  { top: '30%', left: '28%', kind: 'a', text: '🍔 4.8' },
+  { top: '60%', left: '64%', kind: 'b', text: '🧀 4.7' },
+  { top: '22%', left: '66%', kind: 'a', text: '🍕 4.6' },
+  { top: '72%', left: '38%', kind: 'a', text: '🍣 4.9' },
+  { top: '44%', left: '82%', kind: 'b', text: '🥩 4.5' },
+];
+
+const cards = [
+  { name: 'Burger House', emoji: '🍔', rating: '4.8', dist: '2.1 km', time: '25 min', tag: '-30%' },
+  { name: 'Chipa Barrero', emoji: '🧀', rating: '4.7', dist: '0.8 km', time: '15 min', tag: 'Gratis' },
+  { name: 'La Pizzería', emoji: '🍕', rating: '4.6', dist: '3.4 km', time: '35 min', tag: '2x1' },
+  { name: 'Sakura Sushi', emoji: '🍣', rating: '4.9', dist: '4.0 km', time: '40 min', tag: 'Top' },
+];
+
+const chips = ['Todo', '🍔 Burgers', '🍕 Pizza', '🧀 Chipa', '🥩 Asado', '⭐ 4.5+'];
+---
+
+<BaseLayout title="Mapa-first — concepto">
+  <ConceptNav slot="topbar" current="mapa" />
+
+  <div class="mf">
+    <div class="mf__canvas" aria-label="Mapa de tiendas">
+      <span class="mf__road" style="top:32%;left:0;right:0;height:14px"></span>
+      <span class="mf__road" style="top:0;bottom:0;left:54%;width:14px"></span>
+      <span class="mf__road mf__road--thin" style="top:66%;left:0;right:36%;height:8px"></span>
+      <span class="mf__road mf__road--thin" style="top:0;bottom:0;left:24%;width:8px"></span>
+
+      {pins.map((p) => (
+        <div class:list={['mf__pin', `mf__pin--${p.kind}`]} style={`top:${p.top};left:${p.left}`}>
+          <span class="mf__pin-bubble">{p.text}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="mf__topbar">
+      <label class="mf__search">📍 <input type="search" placeholder="¿Dónde comer cerca?" /></label>
+      <div class="mf__chips">
+        {chips.map((c, i) => <button class:list={['mf__chip', i === 0 ? 'is-on' : '']}>{c}</button>)}
+      </div>
+    </div>
+
+    <div class="mf__fab">
+      <button class="mf__fab-btn" aria-label="Acercar">＋</button>
+      <button class="mf__fab-btn" aria-label="Alejar">－</button>
+      <button class="mf__fab-btn mf__fab-btn--loc" aria-label="Mi ubicación">🎯</button>
+    </div>
+
+    <section class="mf__sheet" aria-label="Tiendas cercanas">
+      <div class="mf__handle"></div>
+      <div class="mf__sheet-head">
+        <div>
+          <h2 class="mf__sheet-title">18 tiendas cerca</h2>
+          <p class="mf__sheet-sub">Villa Morra · radio 5 km</p>
+        </div>
+        <button class="mf__list-toggle">Ver lista ☰</button>
+      </div>
+      <div class="mf__scroller">
+        {cards.map((c) => (
+          <a href={u('/tienda')} class="mf__card">
+            <div class="mf__card-img">{c.emoji}<span class="mf__card-tag">{c.tag}</span></div>
+            <div class="mf__card-info">
+              <h3 class="mf__card-name">{c.name}</h3>
+              <div class="mf__card-meta"><span class="mf__star">★ {c.rating}</span> · {c.dist} · {c.time}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .mf {
+    --bg: #0c1118; --panel: rgba(20, 27, 38, .82); --panel-solid: #141b26;
+    --ink: #eaf0f7; --muted: #9fb0c3; --line: rgba(255,255,255,.1);
+    --acc: #ff5a1f; --acc2: #16a34a;
+    --grid: rgba(255,255,255,.05); --road: #2a3545;
+    position: relative; height: calc(100vh - 49px); overflow: hidden;
+    background: var(--bg); color: var(--ink); font-family: "Inter", system-ui, sans-serif;
+  }
+  :global(html[data-theme="light"]) .mf {
+    --bg: #e8eef3; --panel: rgba(255,255,255,.86); --panel-solid: #ffffff;
+    --ink: #16202b; --muted: #5d6b7a; --line: rgba(0,0,0,.08);
+    --grid: rgba(0,0,0,.05); --road: #cdd7e1;
+  }
+
+  .mf__canvas {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 28% 30%, color-mix(in srgb, var(--acc2) 22%, transparent), transparent 38%),
+      radial-gradient(circle at 76% 64%, color-mix(in srgb, var(--acc) 20%, transparent), transparent 42%),
+      var(--bg);
+  }
+  .mf__canvas::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 52px 52px;
+  }
+  .mf__road { position: absolute; background: var(--road); border-radius: 7px; }
+  .mf__road--thin { opacity: .7; }
+
+  .mf__pin { position: absolute; transform: translate(-50%, -50%); }
+  .mf__pin-bubble {
+    display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px; border-radius: 999px;
+    font-weight: 800; font-size: 13px; color: #fff; white-space: nowrap;
+    box-shadow: 0 8px 22px rgba(0,0,0,.4); border: 2px solid rgba(255,255,255,.5);
+  }
+  .mf__pin--a .mf__pin-bubble { background: var(--acc); }
+  .mf__pin--b .mf__pin-bubble { background: var(--acc2); }
+  .mf__pin--me .mf__pin-bubble { background: #2563eb; box-shadow: 0 0 0 8px rgba(37,99,235,.25), 0 8px 22px rgba(0,0,0,.4); }
+
+  .mf__topbar { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .mf__search {
+    display: flex; align-items: center; gap: 10px; padding: 13px 18px; border-radius: 16px;
+    background: var(--panel); backdrop-filter: blur(16px); border: 1px solid var(--line);
+    box-shadow: 0 10px 30px rgba(0,0,0,.25); max-width: 460px;
+  }
+  .mf__search input { flex: 1; border: none; background: none; color: var(--ink); font-size: 15px; }
+  .mf__search input::placeholder { color: var(--muted); }
+  .mf__chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .mf__chips::-webkit-scrollbar { display: none; }
+  .mf__chip {
+    white-space: nowrap; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    background: var(--panel); backdrop-filter: blur(16px); border: 1px solid var(--line); color: var(--ink);
+  }
+  .mf__chip.is-on { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+  .mf__fab { position: absolute; right: 16px; bottom: 280px; display: grid; gap: 8px; }
+  .mf__fab-btn {
+    width: 46px; height: 46px; border-radius: 14px; font-size: 20px; display: grid; place-items: center;
+    background: var(--panel-solid); color: var(--ink); border: 1px solid var(--line); box-shadow: 0 6px 18px rgba(0,0,0,.3);
+  }
+  .mf__fab-btn--loc { color: var(--acc); }
+
+  .mf__sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 5;
+    background: var(--panel-solid); border-radius: 22px 22px 0 0;
+    box-shadow: 0 -16px 44px rgba(0,0,0,.32); padding: 10px 18px 22px;
+    border-top: 1px solid var(--line);
+  }
+  .mf__handle { width: 44px; height: 5px; border-radius: 999px; background: var(--muted); opacity: .5; margin: 4px auto 14px; }
+  .mf__sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .mf__sheet-title { font-size: 19px; font-weight: 800; margin: 0; }
+  .mf__sheet-sub { font-size: 13px; color: var(--muted); margin: 2px 0 0; }
+  .mf__list-toggle { font-size: 13px; font-weight: 700; color: var(--acc); }
+
+  .mf__scroller { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+  .mf__scroller::-webkit-scrollbar { display: none; }
+  .mf__card {
+    flex: 0 0 230px; display: flex; gap: 12px; padding: 10px; border-radius: 16px;
+    background: var(--panel); border: 1px solid var(--line); text-decoration: none; color: var(--ink);
+    transition: transform .15s;
+  }
+  .mf__card:hover { transform: translateY(-3px); }
+  .mf__card-img { position: relative; width: 64px; height: 64px; border-radius: 12px; display: grid; place-items: center; font-size: 32px; background: color-mix(in srgb, var(--acc) 16%, transparent); flex: none; }
+  .mf__card-tag { position: absolute; top: -6px; right: -6px; background: var(--acc); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 999px; }
+  .mf__card-name { font-size: 15px; font-weight: 700; margin: 4px 0 0; }
+  .mf__card-meta { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  .mf__star { color: var(--acc); font-weight: 800; }
+
+  @media (max-width: 760px) {
+    .mf__fab { bottom: 300px; }
+  }
+</style>

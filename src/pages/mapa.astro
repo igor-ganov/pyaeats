@@ -1,0 +1,79 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Topbar from '~/components/shell/Topbar.astro';
+import BottomNav from '~/components/shell/BottomNav.astro';
+import { u } from '~/lib/url.ts';
+
+const chips = ['Todas las tiendas', '🍔 Hamburguesas', '🍕 Pizza', '🧀 Chipa', '🥩 Asado', '⭐ 4.5+', '🛵 Envío gratis'];
+
+const list = [
+  { thumb: 'burger', emoji: '🍔', name: 'Burger House', rating: '4.8', meta: '25–35 min', dist: '2.1 km', tag: '-30%' },
+  { thumb: 'chipa', emoji: '🧀', name: 'Chipa Barrero', rating: '4.7', meta: '15–25 min', dist: '0.8 km', tag: '🛵 Gratis' },
+  { thumb: 'pizza', emoji: '🍕', name: 'La Pizzería', rating: '4.6', meta: '30–40 min', dist: '3.4 km', tag: '2x1' },
+  { thumb: 'sushi', emoji: '🍣', name: 'Sakura Sushi', rating: '4.9', meta: '35–45 min', dist: '4.0 km', tag: '⭐ Top' },
+  { thumb: 'asado', emoji: '🥩', name: 'Don Asador', rating: '4.5', meta: '40–55 min', dist: '5.2 km', tag: '-25%' },
+];
+
+const pins = [
+  { top: '50%', left: '48%', cls: 'alt', text: '📍 Tú' },
+  { top: '32%', left: '28%', cls: '', text: '🍔 4.8' },
+  { top: '58%', left: '62%', cls: 'promo', text: '🧀 4.7' },
+  { top: '22%', left: '68%', cls: '', text: '🍕 4.6' },
+  { top: '72%', left: '38%', cls: '', text: '🍣 4.9' },
+  { top: '44%', left: '80%', cls: 'promo', text: '🥩 4.5' },
+];
+const stemColor = (cls: string): string => (cls === 'alt' ? 'var(--accent)' : cls === 'promo' ? 'var(--promo)' : 'var(--primary)');
+---
+
+<BaseLayout title="Mapa de tiendas">
+  <Topbar slot="topbar" placeholder="Buscar en el mapa…" />
+
+  <div class="shell" style="padding-top:12px;padding-bottom:4px">
+    <div class="chips">
+      {chips.map((c, i) => <button class:list={['chip', i === 0 ? 'chip--active' : '']}>{c}</button>)}
+    </div>
+  </div>
+
+  <div class="map-layout">
+    <section class="map-list">
+      <div class="between" style="margin-bottom:12px">
+        <strong>18 tiendas en el área</strong>
+        <span class="muted" style="font-size:13px">Radio 5 km</span>
+      </div>
+
+      {list.map((s) => (
+        <a href={u('/tienda')} class="map-mini-card">
+          <div class:list={['mc-img', `thumb--${s.thumb}`]}>{s.emoji}</div>
+          <div>
+            <div class="card__title" style="font-size:15px">{s.name} <span class="rating"><span class="star">★</span> {s.rating}</span></div>
+            <div class="card__meta" style="margin-top:4px">{s.meta} <span class="dot">{s.dist}</span></div>
+            <span class="mini-tag" style="margin-top:6px;display:inline-block">{s.tag}</span>
+          </div>
+        </a>
+      ))}
+
+      <p class="note" style="padding:16px 0">Pantalla 4 de 5 — Mapa</p>
+    </section>
+
+    <section class="map-canvas" aria-label="Mapa de tiendas">
+      <span class="map-road" style="top:30%;left:0;right:0;height:10px"></span>
+      <span class="map-road" style="top:0;bottom:0;left:55%;width:10px"></span>
+      <span class="map-road" style="top:65%;left:0;right:40%;height:8px"></span>
+
+      {pins.map((p) => (
+        <div class="pin" style={`top:${p.top};left:${p.left}`}>
+          <span class:list={['head', p.cls]}>{p.text}</span>
+          <span class="stem" style={`border-top-color:${stemColor(p.cls)}`}></span>
+        </div>
+      ))}
+
+      <div class="map-fab">
+        <button class="icon-btn" aria-label="Acercar">➕</button>
+        <button class="icon-btn" aria-label="Alejar">➖</button>
+        <button class="icon-btn" aria-label="Mi ubicación">🎯</button>
+      </div>
+    </section>
+  </div>
+
+  <BottomNav slot="footer" current="mapa" />
+</BaseLayout>

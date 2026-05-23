@@ -1,0 +1,18 @@
+---
+import GlassLayout from '~/layouts/GlassLayout.astro';
+---
+
+<GlassLayout title="Tiendas">
+  <section class="gl__hero" style="margin-top:18px">
+    <div>
+      <span class="gl__hero-badge">🔥 Hoy</span>
+      <h1 class="gl__hero-title">Envío gratis<br />en tu 1.er pedido</h1>
+      <p class="gl__hero-sub">Con el código PYA1</p>
+      <a class="gl__cta" href="#tiendas">Pedir ahora</a>
+    </div>
+    <div class="gl__hero-emoji">🛵</div>
+  </section>
+
+  <div id="tiendas" style="scroll-margin-top:80px"></div>
+  <glass-store-explorer></glass-store-explorer>
+</GlassLayout>

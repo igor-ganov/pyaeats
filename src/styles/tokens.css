@@ -1,0 +1,78 @@
+/* ============================================================
+   PyaEats — design tokens
+   Three independent axes, each on <html data-*>:
+     data-theme   : light | dark          (neutrals / surfaces)
+     data-palette : apetitoso | mango | … (brand hues)
+     data-shape   : redondo | suave | …   (radii)
+   The customizer writes these + inline token overrides to localStorage.
+   ============================================================ */
+:root {
+  color-scheme: light;
+
+  /* Neutrals — light */
+  --bg: #fff7f0;
+  --surface: #ffffff;
+  --surface-2: #fff1e8;
+  --surface-3: #fbe9dc;
+  --text: #20140a;
+  --text-muted: #836f5f;
+  --text-soft: #a3917f;
+  --border: #f1e1d3;
+  --border-strong: #e6d2c0;
+  --shadow: 0 8px 28px rgba(120, 60, 20, .10);
+  --shadow-sm: 0 2px 10px rgba(120, 60, 20, .08);
+
+  /* Derived accents — re-evaluate per theme + palette automatically */
+  --primary-600: color-mix(in srgb, var(--primary) 84%, #000);
+  --primary-soft: color-mix(in srgb, var(--primary) 16%, var(--surface));
+  --promo-soft: color-mix(in srgb, var(--promo) 16%, var(--surface));
+  --accent-soft: color-mix(in srgb, var(--accent) 16%, var(--surface));
+
+  /* Spacing & motion */
+  --gap: 16px;
+  --thumb-h: 156px;
+  --maxw: 1180px;
+  --ease: cubic-bezier(.2, .7, .3, 1);
+
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #120e0a;
+  --surface: #1d1711;
+  --surface-2: #261e17;
+  --surface-3: #30261d;
+  --text: #fdf6ef;
+  --text-muted: #b7a797;
+  --text-soft: #8a7a6b;
+  --border: #322a21;
+  --border-strong: #43382c;
+  --shadow: 0 10px 34px rgba(0, 0, 0, .45);
+  --shadow-sm: 0 2px 12px rgba(0, 0, 0, .35);
+
+  --primary-soft: color-mix(in srgb, var(--primary) 26%, var(--surface));
+  --promo-soft: color-mix(in srgb, var(--promo) 26%, var(--surface));
+  --accent-soft: color-mix(in srgb, var(--accent) 26%, var(--surface));
+}
+
+/* =========================================================================
+   PALETTE — brand hues (theme-independent, vibrant on both light & dark)
+   ========================================================================= */
+:root,
+[data-palette="apetitoso"] { --primary: #ff5a1f; --promo: #e11d48; --accent: #16a34a; --rating: #ffb400; }
+[data-palette="mango"]     { --primary: #f59e0b; --promo: #ea580c; --accent: #65a30d; --rating: #f59e0b; }
+[data-palette="tropical"]  { --primary: #16a34a; --promo: #f97316; --accent: #eab308; --rating: #f59e0b; }
+[data-palette="frutilla"]  { --primary: #e11d48; --promo: #db2777; --accent: #16a34a; --rating: #f59e0b; }
+[data-palette="uva"]       { --primary: #7c3aed; --promo: #db2777; --accent: #0ea5e9; --rating: #f59e0b; }
+[data-palette="paraguay"]  { --primary: #d52b1e; --promo: #0038a8; --accent: #16a34a; --rating: #f5b400; }
+
+/* =========================================================================
+   SHAPE — block radii (cards, surfaces, pills)
+   ========================================================================= */
+:root,
+[data-shape="redondo"] { --r-sm: 10px; --r-md: 16px; --r-lg: 22px; --r-pill: 999px; }
+[data-shape="suave"]   { --r-sm: 14px; --r-md: 22px; --r-lg: 30px; --r-pill: 999px; }
+[data-shape="recto"]   { --r-sm: 3px;  --r-md: 4px;  --r-lg: 6px;  --r-pill: 6px; }
+[data-shape="pildora"] { --r-sm: 18px; --r-md: 26px; --r-lg: 36px; --r-pill: 999px; }

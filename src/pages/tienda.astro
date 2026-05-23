@@ -1,0 +1,116 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Topbar from '~/components/shell/Topbar.astro';
+import BottomNav from '~/components/shell/BottomNav.astro';
+
+const stats = [
+  { b: '🟢 Abierto', s: 'hasta 23:00' },
+  { b: '⚡ 25–35 min', s: 'tiempo estimado' },
+  { b: '🛵 Gs. 8.000', s: 'costo de envío' },
+  { b: '📍 2.1 km', s: 'Villa Morra' },
+  { b: '🏷️ -30%', s: 'código PYABURGER' },
+];
+
+const bars = [
+  { n: '5', w: '82%' }, { n: '4', w: '11%' }, { n: '3', w: '4%' }, { n: '2', w: '2%' }, { n: '1', w: '1%' },
+];
+
+const reviewFilters = ['Todas', 'Con fotos 📷', '5 ★', 'Más recientes', 'Comida 🍔', 'Entrega 🛵'];
+
+const reviews = [
+  { ava: 'a1', initials: 'MG', name: 'María González', when: 'hace 2 días', stars: '★★★★★', text: 'La hamburguesa doble estaba increíble, llegó caliente y antes de tiempo. El repartidor súper amable. ¡Pido de nuevo seguro!', photos: [{ t: 'burger', e: '🍔' }, { t: 'drink', e: '🥤' }] },
+  { ava: 'a2', initials: 'JR', name: 'Jorge Ramírez', when: 'hace 5 días', stars: '★★★★☆', text: 'Muy rica la comida y buena porción de papas. Tardó un poco más de lo estimado, pero valió la pena. Buen precio con la promo.', photos: [] },
+  { ava: 'a3', initials: 'CB', name: 'Carla Benítez', when: 'hace 1 semana', stars: '★★★★★', text: 'Mi lugar favorito de Asunción para pedir un viernes. Las salsas caseras son lo mejor. Empaque impecable. 👌', photos: [{ t: 'burger', e: '🍔' }] },
+  { ava: 'a4', initials: 'DP', name: 'Diego Paredes', when: 'hace 2 semanas', stars: '★★★☆☆', text: 'Buena hamburguesa pero esta vez faltó un acompañamiento del combo. Atención al cliente lo resolvió rápido con un cupón.', photos: [] },
+];
+
+const menu = [
+  { thumb: 'burger', emoji: '🍔', name: 'Doble Cheddar', desc: 'Doble carne, cheddar, bacon', price: 'Gs. 38.000' },
+  { thumb: 'burger', emoji: '🍔', name: 'Clásica BBQ', desc: 'Carne, cebolla crispy, salsa BBQ', price: 'Gs. 32.000' },
+  { thumb: 'taco', emoji: '🍟', name: 'Papas con cheddar', desc: 'Porción grande para compartir', price: 'Gs. 18.000' },
+  { thumb: 'drink', emoji: '🥤', name: 'Bebida 500 ml', desc: 'Línea Coca-Cola', price: 'Gs. 9.000' },
+];
+---
+
+<BaseLayout title="Burger House · reseñas">
+  <Topbar slot="topbar" placeholder="Buscar…" />
+
+  <div class="shell page">
+    <div class="cover thumb--burger">🍔
+      <div class="store-badge">
+        <span class="logo">🍔</span>
+        <div>
+          <h1>Burger House</h1>
+          <div class="card__meta" style="margin-top:4px">Hamburguesas · Americana <span class="dot">$$</span> <span class="rating"><span class="star">★</span> 4.8 (1.240)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      {stats.map((s) => <div class="stat"><b>{s.b}</b><small>{s.s}</small></div>)}
+    </div>
+
+    <div class="detail-grid">
+      <section>
+        <div class="section-head"><h2>Calificaciones y reseñas</h2><a href="#">Escribir reseña ✍️</a></div>
+
+        <div class="score-box">
+          <div style="text-align:center">
+            <div class="score-big">4.8</div>
+            <div class="score-stars">★★★★★</div>
+            <small class="muted">1.240 reseñas</small>
+          </div>
+          <div class="bars">
+            {bars.map((b) => (
+              <div class="bar"><span>{b.n}</span><div class="track"><div class="fill" style={`width:${b.w}`}></div></div><span>{b.w}</span></div>
+            ))}
+          </div>
+        </div>
+
+        <div class="chips" style="margin-top:16px">
+          {reviewFilters.map((f, i) => <button class:list={['chip', i === 0 ? 'chip--active' : '']}>{f}</button>)}
+        </div>
+
+        {reviews.map((r) => (
+          <div class="review">
+            <span class:list={['ava', r.ava]}>{r.initials}</span>
+            <div>
+              <div class="between"><h4>{r.name}</h4><span class="when">{r.when}</span></div>
+              <div class="stars">{r.stars}</div>
+              <p>{r.text}</p>
+              {r.photos.length > 0 && (
+                <div class="photos">{r.photos.map((p) => <span class:list={[`thumb--${p.t}`]}>{p.e}</span>)}</div>
+              )}
+            </div>
+          </div>
+        ))}
+
+        <a href="#" class="btn btn--ghost btn--block" style="margin-top:18px">Ver las 1.240 reseñas</a>
+      </section>
+
+      <aside>
+        <div class="order-card">
+          <div class="between" style="margin-bottom:6px"><h3 style="font-size:18px">Más pedidos</h3><span class="mini-tag">🏷️ -30%</span></div>
+
+          {menu.map((m) => (
+            <div class="menu-item">
+              <div class:list={['mi-img', `thumb--${m.thumb}`]}>{m.emoji}</div>
+              <div>
+                <strong>{m.name}</strong>
+                <div class="card__meta" style="margin-top:2px">{m.desc}</div>
+                <div class="price" style="margin-top:6px">{m.price}</div>
+              </div>
+              <button class="add" aria-label="Agregar">+</button>
+            </div>
+          ))}
+
+          <a href="#" class="btn btn--primary btn--block btn--lg" style="margin-top:16px">Ver carrito · Gs. 65.000 🛒</a>
+        </div>
+      </aside>
+    </div>
+
+    <p class="note">Maqueta PyaEats · Pantalla 5 de 5 — Detalle de tienda con reseñas y rating</p>
+  </div>
+
+  <BottomNav slot="footer" current="inicio" />
+</BaseLayout>

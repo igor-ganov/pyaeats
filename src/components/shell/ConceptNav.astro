@@ -1,0 +1,81 @@
+---
+import { u } from '~/lib/url.ts';
+
+interface Props { readonly current: 'apetitoso' | 'editorial' | 'brutalism' | 'mapa' | 'glass' }
+const { current } = Astro.props;
+
+const concepts = [
+  { key: 'apetitoso', href: u('/'),             label: 'Apetitoso',  hint: 'Glovo / PedidosYa' },
+  { key: 'editorial', href: u('/c/editorial'),  label: 'Editorial',  hint: 'Revista gastronómica' },
+  { key: 'brutalism', href: u('/c/brutalism'),  label: 'Brutalism',  hint: 'Neo-brutalista' },
+  { key: 'mapa',      href: u('/c/mapa'),       label: 'Mapa-first', hint: 'Centrado en el mapa' },
+  { key: 'glass',     href: u('/c/glass'),      label: 'Glass',      hint: 'Vidrio / iOS' },
+] as const;
+---
+
+<nav class="conceptnav" aria-label="Conceptos de diseño">
+  <span class="conceptnav__brand">PyaEats · <b>5 conceptos</b></span>
+  <div class="conceptnav__pills">
+    {concepts.map((c, i) => (
+      <a
+        href={c.href}
+        class:list={['conceptnav__pill', current === c.key ? 'is-active' : '']}
+        aria-current={current === c.key ? 'page' : undefined}
+        title={c.hint}
+      >
+        <span class="conceptnav__num">{i + 1}</span>{c.label}
+      </a>
+    ))}
+  </div>
+  <theme-toggle></theme-toggle>
+</nav>
+
+<style>
+  .conceptnav {
+    position: sticky; top: 0; z-index: 90;
+    display: flex; align-items: center; gap: 14px;
+    padding: 8px 16px;
+    background: color-mix(in srgb, #0c0a09 88%, transparent);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+    color: #fff;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .conceptnav__brand { font-size: 13px; font-weight: 700; letter-spacing: -.2px; white-space: nowrap; opacity: .9; }
+  .conceptnav__brand b { color: #ff7a45; }
+
+  .conceptnav__pills {
+    display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; flex: 1;
+    mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent);
+    padding: 2px;
+  }
+  .conceptnav__pills::-webkit-scrollbar { display: none; }
+  .conceptnav__pill {
+    display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+    padding: 6px 13px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    color: rgba(255, 255, 255, .78); text-decoration: none;
+    border: 1px solid transparent; transition: background .15s, color .15s, border-color .15s;
+  }
+  .conceptnav__pill:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+  .conceptnav__num {
+    display: grid; place-items: center; width: 18px; height: 18px; border-radius: 999px;
+    background: rgba(255, 255, 255, .14); font-size: 11px; font-weight: 800;
+  }
+  .conceptnav__pill.is-active {
+    background: linear-gradient(135deg, #ff5a1f, #e11d48); color: #fff;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, .4);
+  }
+  .conceptnav__pill.is-active .conceptnav__num { background: rgba(255, 255, 255, .28); }
+
+  .conceptnav :global(.theme-toggle .tt) {
+    width: 36px; height: 36px; font-size: 16px;
+    background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .18); color: #fff;
+  }
+  .conceptnav :global(.theme-toggle .tt:hover) { background: rgba(255, 255, 255, .22); }
+
+  @media (max-width: 760px) {
+    .conceptnav__brand { display: none; }
+    .conceptnav__pill { padding: 6px 11px; }
+  }
+</style>

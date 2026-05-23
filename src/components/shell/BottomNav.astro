@@ -1,0 +1,22 @@
+---
+import { u } from '~/lib/url.ts';
+
+interface Props { readonly current?: 'inicio' | 'buscar' | 'promos' | 'mapa' | 'carrito' }
+const { current = 'inicio' } = Astro.props;
+
+const items = [
+  { key: 'inicio', href: u('/'),             icon: '🏠', label: 'Inicio' },
+  { key: 'buscar', href: u('/buscar'),       icon: '🔎', label: 'Buscar' },
+  { key: 'promos', href: u('/promociones'),  icon: '🏷️', label: 'Promos' },
+  { key: 'mapa',   href: u('/mapa'),         icon: '🗺️', label: 'Mapa' },
+  { key: 'carrito',href: '#',                icon: '🛒', label: 'Carrito' },
+] as const;
+---
+
+<nav class="botnav">
+  {items.map((i) => (
+    <a href={i.href} class:list={[current === i.key ? 'active' : '']}>
+      <span class="bi">{i.icon}</span>{i.label}
+    </a>
+  ))}
+</nav>

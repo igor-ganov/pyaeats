@@ -1,0 +1,77 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ConceptNav from '~/components/shell/ConceptNav.astro';
+import Topbar from '~/components/shell/Topbar.astro';
+import BottomNav from '~/components/shell/BottomNav.astro';
+import { u } from '~/lib/url.ts';
+
+const categories = [
+  { icon: '🍔', label: 'Hamburguesas' },
+  { icon: '🍕', label: 'Pizza' },
+  { icon: '🍣', label: 'Sushi' },
+  { icon: '🌮', label: 'Mexicana' },
+  { icon: '🧀', label: 'Chipa' },
+  { icon: '🥩', label: 'Asado' },
+  { icon: '🍰', label: 'Postres' },
+  { icon: '🥤', label: 'Bebidas' },
+];
+
+const stores = [
+  { name: 'Burger House', thumb: 'burger', emoji: '🍔', rating: '4.8', meta: 'Hamburguesas', extra: '25–35 min · Gs. 8.000 envío', tags: ['🛵 Express', '$$', '2.1 km'], tag: { text: '-30%', kind: '' }, fav: '🤍' },
+  { name: 'La Pizzería', thumb: 'pizza', emoji: '🍕', rating: '4.6', meta: 'Pizza · Italiana', extra: '30–40 min', tags: ['🏷️ 2x1', '$$', '3.4 km'], tag: { text: 'Envío gratis', kind: 'free' }, fav: '❤️' },
+  { name: 'Sakura Sushi', thumb: 'sushi', emoji: '🍣', rating: '4.9', meta: 'Japonesa', extra: '35–45 min · Gs. 12.000 envío', tags: ['⭐ Top', '$$$', '4.0 km'], fav: '🤍' },
+  { name: 'Chipa Barrero', thumb: 'chipa', emoji: '🧀', rating: '4.7', meta: 'Paraguaya', extra: '15–25 min', tags: ['⚡ Express', '$', '0.8 km'], tag: { text: 'Envío gratis', kind: 'free' }, fav: '🤍' },
+  { name: 'Don Asador', thumb: 'asado', emoji: '🥩', rating: '4.5', meta: 'Parrilla · Asado', extra: '40–55 min', tags: ['🏷️ Promo', '$$$', '5.2 km'], tag: { text: '-25%', kind: '' }, fav: '🤍' },
+  { name: 'El Mexicano', thumb: 'taco', emoji: '🌮', rating: '4.4', meta: 'Mexicana', extra: '25–35 min · Gs. 9.000 envío', tags: ['$$', '2.9 km'], fav: '❤️' },
+];
+
+const filters = ['Todos', '🛵 Envío gratis', '⚡ Express', '⭐ Mejor valorados', '🏷️ Con promo', '$ Económico'];
+---
+
+<BaseLayout title="Tiendas cerca de ti" customizer={true}>
+  <ConceptNav slot="topbar" current="apetitoso" />
+  <Topbar slot="topbar" />
+
+  <div class="shell page">
+    <section class="hero">
+      <h1>Tu comida favorita, en la puerta 🛵</h1>
+      <p>Cientos de tiendas en Paraguay. Envío gratis en tu primer pedido con el código <b>PYA1</b>.</p>
+      <a href={u('/promociones')} class="btn btn--primary btn--lg">Ver promociones</a>
+    </section>
+
+    <div class="section-head"><h2>¿Qué se te antoja?</h2><a href={u('/buscar')}>Ver todo</a></div>
+    <ul class="cats">
+      {categories.map((c) => (
+        <li><a href={u('/buscar')} class="cat"><span class="cat__ic">{c.icon}</span><span>{c.label}</span></a></li>
+      ))}
+    </ul>
+
+    <div class="section-head"><h2>Tiendas cerca de ti</h2><a href={u('/mapa')}>Ver en el mapa 🗺️</a></div>
+    <div class="chips">
+      {filters.map((f, i) => (
+        <button class:list={['chip', i === 0 ? 'chip--active' : '']}>{f}</button>
+      ))}
+    </div>
+
+    <ul class="grid grid--stores">
+      {stores.map((s) => (
+        <li><a href={u('/tienda')} class="card">
+          <div class:list={['thumb', `thumb--${s.thumb}`]}>
+            {s.emoji}
+            {s.tag && <span class:list={['tag', s.tag.kind === 'free' ? 'tag--free' : '']}>{s.tag.text}</span>}
+            <span class="fav">{s.fav}</span>
+          </div>
+          <div class="card__body">
+            <div class="card__title">{s.name} <span class="rating"><span class="star">★</span> {s.rating}</span></div>
+            <div class="card__meta">{s.meta} <span class="dot">{s.extra}</span></div>
+            <div class="card__tags">{s.tags.map((t) => <span class="mini-tag">{t}</span>)}</div>
+          </div>
+        </a></li>
+      ))}
+    </ul>
+
+    <p class="note">Maqueta PyaEats · Pantalla 1 de 5 — Lista de tiendas</p>
+  </div>
+
+  <BottomNav slot="footer" current="inicio" />
+</BaseLayout>

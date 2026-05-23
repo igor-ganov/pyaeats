@@ -1,0 +1,31 @@
+---
+import { u } from '~/lib/url.ts';
+
+interface Props {
+  readonly query?: string;
+  readonly placeholder?: string;
+}
+const { query = '', placeholder = 'Buscar tiendas, platos o cocinas…' } = Astro.props;
+---
+
+<header class="appbar">
+  <div class="appbar__inner">
+    <a href={u('/')} class="brand"><span class="brand__logo">🍔</span><span class="full">Pya<b>Eats</b></span></a>
+
+    <div class="locator">
+      <small>Entregar en</small>
+      <strong>📍 Asunción, Villa Morra ▾</strong>
+    </div>
+
+    <label class="searchbar">
+      🔎 <input type="search" value={query} placeholder={placeholder} />
+    </label>
+
+    <nav class="appbar__actions">
+      <a href={u('/buscar')} class="icon-btn icon-btn--search" aria-label="Buscar">🔎</a>
+      <theme-toggle></theme-toggle>
+      <a href="#" class="icon-btn icon-btn--cart" aria-label="Carrito">🛒<span class="badge">3</span></a>
+      <a href="#" class="avatar" aria-label="Perfil">M</a>
+    </nav>
+  </div>
+</header>

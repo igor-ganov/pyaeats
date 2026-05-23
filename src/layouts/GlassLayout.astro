@@ -1,0 +1,45 @@
+---
+import '~/styles/glass.css';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ConceptNav from '~/components/shell/ConceptNav.astro';
+import { u } from '~/lib/url.ts';
+
+interface Props {
+  readonly title: string;
+  /** When set, the header shows a back link instead of the location selector. */
+  readonly backHref?: string;
+  readonly backLabel?: string;
+}
+
+const { title, backHref, backLabel = 'Volver' } = Astro.props;
+---
+
+<BaseLayout title={`${title} — Glass`} fonts="Quicksand:wght@400;500;600;700">
+  <ConceptNav slot="topbar" current="glass" />
+
+  <div class="gl">
+    <div class="gl__content">
+      <header class="gl__head">
+        {backHref ? (
+          <a class="gl__back" href={backHref}>← {backLabel}</a>
+        ) : (
+          <div class="gl__loc"><span class="gl__loc-sub">Entregar en</span><strong>📍 Villa Morra ▾</strong></div>
+        )}
+        <div class="gl__head-actions">
+          <a class="gl__cart-link" href={u('/c/glass/carrito')} aria-label="Ver carrito">🛒<glass-cart-badge></glass-cart-badge></a>
+          <span class="gl__avatar">M</span>
+        </div>
+      </header>
+
+      <slot />
+
+      <footer class="gl__foot">PyaEats · Concepto 5 — Glass · prototipo interactivo</footer>
+    </div>
+
+    <glass-palette></glass-palette>
+  </div>
+
+  <script>
+    import '~/components/wc/glass/index.ts';
+  </script>
+</BaseLayout>

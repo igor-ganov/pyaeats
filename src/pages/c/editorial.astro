@@ -1,0 +1,138 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ConceptNav from '~/components/shell/ConceptNav.astro';
+import { u } from '~/lib/url.ts';
+
+const featured = { name: 'Sakura Sushi', kind: 'Cocina japonesa · Villa Morra', rating: '4.9', emoji: '🍣' };
+
+const stories = [
+  { n: '01', name: 'Burger House', kind: 'Hamburguesas de autor', rating: '4.8', time: '25–35 min', note: 'La doble cheddar que tiene a Asunción rendida.', emoji: '🍔' },
+  { n: '02', name: 'Chipa Barrero', kind: 'Tradición paraguaya', rating: '4.7', time: '15–25 min', note: 'Chipa recién horneada, lista en minutos.', emoji: '🧀' },
+  { n: '03', name: 'La Pizzería', kind: 'Napolitana a la leña', rating: '4.6', time: '30–40 min', note: 'Masa de fermentación lenta, 48 horas.', emoji: '🍕' },
+  { n: '04', name: 'Don Asador', kind: 'Parrilla y asado', rating: '4.5', time: '40–55 min', note: 'El costillar que define el fin de semana.', emoji: '🥩' },
+];
+
+const cuisines = ['Hamburguesas', 'Pizza', 'Sushi', 'Mexicana', 'Chipa', 'Asado', 'Postres', 'Vegetariana'];
+---
+
+<BaseLayout title="Editorial — concepto" fonts="Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600">
+  <ConceptNav slot="topbar" current="editorial" />
+
+  <div class="ed">
+    <header class="ed__masthead">
+      <div class="ed__kicker">Asunción · Edición delivery</div>
+      <h1 class="ed__logo">El Sabroso</h1>
+      <p class="ed__tagline">Guía gastronómica diaria — qué pedir, dónde y por qué</p>
+      <div class="ed__rule"></div>
+      <nav class="ed__index">
+        {cuisines.map((c) => <a href="#" class="ed__index-link">{c}</a>)}
+      </nav>
+    </header>
+
+    <section class="ed__feature">
+      <div class="ed__feature-text">
+        <span class="ed__label">Plato del día</span>
+        <h2 class="ed__feature-title">{featured.name}</h2>
+        <p class="ed__feature-kind">{featured.kind}</p>
+        <p class="ed__lede">Cortes precisos, arroz templado y una carta de rolls que cambia con la estación. El pedido que vale la espera de cuarenta minutos.</p>
+        <div class="ed__feature-meta">
+          <span class="ed__stars">★★★★★ <b>{featured.rating}</b></span>
+          <a href={u('/tienda')} class="ed__readmore">Ver la carta →</a>
+        </div>
+      </div>
+      <div class="ed__feature-mark">{featured.emoji}</div>
+    </section>
+
+    <div class="ed__rule"></div>
+
+    <section class="ed__stories">
+      <h3 class="ed__section-title">Recomendados de hoy</h3>
+      <div class="ed__grid">
+        {stories.map((s) => (
+          <article class="ed__story">
+            <div class="ed__story-num">{s.n}</div>
+            <div class="ed__story-body">
+              <div class="ed__story-head">
+                <h4 class="ed__story-name">{s.name}</h4>
+                <span class="ed__story-mark">{s.emoji}</span>
+              </div>
+              <p class="ed__story-kind">{s.kind}</p>
+              <p class="ed__story-note">{s.note}</p>
+              <div class="ed__story-meta">
+                <span>★ {s.rating}</span><span class="ed__dot">·</span><span>{s.time}</span>
+                <a href={u('/tienda')} class="ed__story-link">Pedir</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <footer class="ed__foot">PyaEats · Concepto 2 de 5 — Editorial</footer>
+  </div>
+</BaseLayout>
+
+<style>
+  .ed {
+    --paper: #f7f1e6; --paper-2: #fffdf8; --ink: #241c14; --muted: #7d6f5c;
+    --rule: #ddd0bb; --accent: #8a2c3b;
+    min-height: 100vh; background: var(--paper); color: var(--ink);
+    font-family: "Inter", system-ui, sans-serif;
+    padding: 0 clamp(16px, 5vw, 64px) 60px;
+  }
+  :global(html[data-theme="dark"]) .ed {
+    --paper: #16110b; --paper-2: #1f1810; --ink: #f1e7d6; --muted: #a4937c;
+    --rule: #382e22; --accent: #e0939d;
+  }
+
+  .ed__masthead { text-align: center; padding: 46px 0 26px; max-width: 900px; margin: 0 auto; }
+  .ed__kicker { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+  .ed__logo { font-family: "Playfair Display", serif; font-weight: 800; font-size: clamp(46px, 9vw, 96px); line-height: .95; letter-spacing: -1px; margin: 10px 0; }
+  .ed__tagline { font-family: "Playfair Display", serif; font-style: italic; font-size: clamp(15px, 2.4vw, 20px); color: var(--muted); margin: 0; }
+  .ed__rule { height: 2px; background: var(--ink); margin: 26px auto; max-width: 1100px; }
+  .ed__index { display: flex; flex-wrap: wrap; gap: 4px 22px; justify-content: center; }
+  .ed__index-link { font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; padding: 4px 0; border-bottom: 1px solid transparent; }
+  .ed__index-link:hover { border-bottom-color: var(--accent); color: var(--accent); }
+
+  .ed__feature {
+    display: grid; grid-template-columns: 1fr 320px; gap: 40px; align-items: center;
+    max-width: 1100px; margin: 14px auto 0;
+  }
+  .ed__label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 800; }
+  .ed__feature-title { font-family: "Playfair Display", serif; font-weight: 800; font-size: clamp(36px, 6vw, 64px); line-height: 1; margin: 10px 0 6px; }
+  .ed__feature-kind { font-style: italic; color: var(--muted); margin: 0 0 16px; font-family: "Playfair Display", serif; font-size: 18px; }
+  .ed__lede { font-size: 18px; line-height: 1.6; max-width: 56ch; margin: 0 0 20px; }
+  .ed__feature-meta { display: flex; align-items: center; gap: 20px; }
+  .ed__stars { color: var(--accent); font-size: 15px; letter-spacing: 2px; }
+  .ed__stars b { color: var(--ink); margin-left: 6px; }
+  .ed__readmore { font-weight: 700; color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
+  .ed__feature-mark {
+    font-size: 150px; text-align: center; line-height: 1;
+    border: 2px solid var(--ink); border-radius: 50%; aspect-ratio: 1; display: grid; place-items: center;
+    background: var(--paper-2);
+  }
+
+  .ed__section-title { font-family: "Playfair Display", serif; font-weight: 700; font-size: 28px; max-width: 1100px; margin: 0 auto 22px; }
+  .ed__stories { max-width: 1100px; margin: 0 auto; }
+  .ed__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
+  .ed__story { display: flex; gap: 18px; padding: 26px 0; border-top: 1px solid var(--rule); }
+  .ed__story-num { font-family: "Playfair Display", serif; font-size: 30px; font-weight: 700; color: var(--accent); min-width: 46px; }
+  .ed__story-body { flex: 1; }
+  .ed__story-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .ed__story-name { font-family: "Playfair Display", serif; font-weight: 700; font-size: 24px; margin: 0; }
+  .ed__story-mark { font-size: 26px; }
+  .ed__story-kind { font-style: italic; color: var(--accent); margin: 2px 0 8px; font-size: 14px; }
+  .ed__story-note { color: var(--muted); margin: 0 0 12px; line-height: 1.55; }
+  .ed__story-meta { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+  .ed__dot { color: var(--rule); }
+  .ed__story-link { margin-left: auto; color: var(--ink); border: 1px solid var(--ink); padding: 6px 16px; border-radius: 2px; font-size: 13px; text-decoration: none; }
+  .ed__story-link:hover { background: var(--ink); color: var(--paper); }
+
+  .ed__foot { text-align: center; color: var(--muted); font-size: 13px; margin-top: 48px; font-style: italic; }
+
+  @media (max-width: 860px) {
+    .ed__feature { grid-template-columns: 1fr; }
+    .ed__feature-mark { max-width: 220px; margin: 0 auto; font-size: 100px; }
+    .ed__grid { grid-template-columns: 1fr; gap: 0; }
+  }
+</style>

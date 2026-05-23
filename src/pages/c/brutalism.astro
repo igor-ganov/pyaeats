@@ -1,0 +1,140 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ConceptNav from '~/components/shell/ConceptNav.astro';
+import { u } from '~/lib/url.ts';
+
+const cats = ['🍔 BURGERS', '🍕 PIZZA', '🍣 SUSHI', '🧀 CHIPA', '🥩 ASADO', '🌮 TACOS', '🍰 DULCE', '🥤 BEBIDA'];
+
+const stores = [
+  { name: 'BURGER HOUSE', kind: 'HAMBURGUESAS', rating: '4.8', time: '25 MIN', emoji: '🍔', tag: '-30%', color: '#ffe600' },
+  { name: 'LA PIZZERÍA', kind: 'PIZZA · ITALIANA', rating: '4.6', time: '35 MIN', emoji: '🍕', tag: '2X1', color: '#00e5ff' },
+  { name: 'SAKURA SUSHI', kind: 'JAPONESA', rating: '4.9', time: '40 MIN', emoji: '🍣', tag: 'TOP', color: '#ff5cc8' },
+  { name: 'CHIPA BARRERO', kind: 'PARAGUAYA', rating: '4.7', time: '15 MIN', emoji: '🧀', tag: 'FREE', color: '#9dff4d' },
+  { name: 'DON ASADOR', kind: 'PARRILLA', rating: '4.5', time: '50 MIN', emoji: '🥩', tag: '-25%', color: '#ff8a3d' },
+  { name: 'EL MEXICANO', kind: 'MEXICANA', rating: '4.4', time: '30 MIN', emoji: '🌮', tag: 'NEW', color: '#c9a3ff' },
+];
+---
+
+<BaseLayout title="Brutalism — concepto" fonts="Space+Mono:wght@400;700">
+  <ConceptNav slot="topbar" current="brutalism" />
+
+  <div class="br">
+    <header class="br__bar">
+      <div class="br__logo">PYA<span>EATS</span></div>
+      <div class="br__search">
+        <span>🔎</span><input type="search" placeholder="QUÉ COMÉS HOY?" />
+        <button class="br__btn">BUSCAR</button>
+      </div>
+      <a href="#" class="br__cart">🛒 3</a>
+    </header>
+
+    <section class="br__hero">
+      <h1 class="br__hero-title">COMIDA.<br />RÁPIDO.<br />EN TU PUERTA.</h1>
+      <div class="br__hero-side">
+        <div class="br__sticker">ENVÍO<br />GRATIS</div>
+        <p class="br__hero-note">CIENTOS DE LOCALES EN PARAGUAY. CÓDIGO <b>PYA1</b> EN TU PRIMER PEDIDO.</p>
+        <a href={u('/tienda')} class="br__btn br__btn--big">VER LOCALES →</a>
+      </div>
+    </section>
+
+    <nav class="br__cats">
+      {cats.map((c) => <a href="#" class="br__cat">{c}</a>)}
+    </nav>
+
+    <h2 class="br__h2">// LOCALES CERCA</h2>
+    <div class="br__grid">
+      {stores.map((s) => (
+        <a href={u('/tienda')} class="br__card" style={`--c:${s.color}`}>
+          <div class="br__card-top">
+            <span class="br__emoji">{s.emoji}</span>
+            <span class="br__tag">{s.tag}</span>
+          </div>
+          <div class="br__card-body">
+            <h3 class="br__name">{s.name}</h3>
+            <p class="br__kind">{s.kind}</p>
+            <div class="br__meta">
+              <span class="br__rating">★ {s.rating}</span>
+              <span class="br__time">{s.time}</span>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <footer class="br__foot">PYAEATS · CONCEPTO 3 DE 5 — NEO-BRUTALISM</footer>
+  </div>
+</BaseLayout>
+
+<style>
+  .br {
+    --bg: #f4f4f0; --fg: #111; --line: #111; --acc: #ffe600;
+    min-height: 100vh; background: var(--bg); color: var(--fg);
+    font-family: "Space Mono", ui-monospace, monospace;
+    padding: 0 clamp(14px, 4vw, 48px) 60px;
+  }
+  :global(html[data-theme="dark"]) .br {
+    --bg: #0f0f0f; --fg: #f4f4f0; --line: #f4f4f0; --acc: #ffe600;
+  }
+
+  .br__bar {
+    display: flex; align-items: center; gap: 16px; padding: 18px 0;
+    border-bottom: 4px solid var(--line); margin-bottom: 0;
+  }
+  .br__logo { font-weight: 700; font-size: 26px; letter-spacing: -1px; }
+  .br__logo span { background: var(--acc); color: #111; padding: 0 6px; }
+  .br__search {
+    flex: 1; display: flex; align-items: center; gap: 10px; max-width: 560px;
+    border: 3px solid var(--line); background: var(--bg); padding: 8px 14px;
+  }
+  .br__search input { flex: 1; border: none; background: none; color: var(--fg); font-family: inherit; font-size: 14px; text-transform: uppercase; }
+  .br__search input::placeholder { color: var(--fg); opacity: .55; }
+  .br__btn {
+    font-family: inherit; font-weight: 700; text-transform: uppercase; cursor: pointer;
+    background: var(--acc); color: #111; border: 3px solid var(--line); padding: 8px 16px;
+    box-shadow: 4px 4px 0 var(--line); transition: transform .1s, box-shadow .1s;
+  }
+  .br__btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--line); }
+  .br__btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--line); }
+  .br__cart { border: 3px solid var(--line); padding: 9px 14px; font-weight: 700; text-decoration: none; color: var(--fg); box-shadow: 4px 4px 0 var(--line); white-space: nowrap; }
+
+  .br__hero {
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 0;
+    border-bottom: 4px solid var(--line);
+  }
+  .br__hero-title { font-size: clamp(40px, 8vw, 92px); line-height: .92; font-weight: 700; letter-spacing: -2px; padding: 36px 28px 36px 0; margin: 0; }
+  .br__hero-side { border-left: 4px solid var(--line); padding: 28px; display: flex; flex-direction: column; gap: 18px; }
+  .br__sticker { align-self: flex-start; background: var(--acc); color: #111; font-weight: 700; font-size: 22px; line-height: 1; padding: 14px 18px; border: 3px solid var(--line); transform: rotate(-4deg); box-shadow: 5px 5px 0 var(--line); }
+  .br__hero-note { font-size: 14px; line-height: 1.6; text-transform: uppercase; margin: 0; }
+  .br__hero-note b { background: var(--acc); color: #111; padding: 0 4px; }
+  .br__btn--big { align-self: flex-start; font-size: 18px; padding: 14px 26px; }
+
+  .br__cats { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 4px solid var(--line); }
+  .br__cat { padding: 14px 18px; font-size: 13px; font-weight: 700; text-decoration: none; color: var(--fg); border-right: 3px solid var(--line); transition: background .12s; }
+  .br__cat:hover { background: var(--acc); color: #111; }
+
+  .br__h2 { font-size: 16px; font-weight: 700; margin: 28px 0 16px; letter-spacing: 1px; }
+  .br__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .br__card {
+    border: 3px solid var(--line); background: var(--bg); text-decoration: none; color: var(--fg);
+    box-shadow: 7px 7px 0 var(--line); transition: transform .12s, box-shadow .12s;
+  }
+  .br__card:hover { transform: translate(-3px, -3px); box-shadow: 10px 10px 0 var(--line); }
+  .br__card-top { display: flex; align-items: flex-start; justify-content: space-between; padding: 18px; background: var(--c); border-bottom: 3px solid var(--line); }
+  .br__emoji { font-size: 52px; line-height: 1; }
+  .br__tag { background: #111; color: #fff; font-weight: 700; font-size: 13px; padding: 5px 10px; border: 2px solid #111; }
+  .br__card-body { padding: 16px 18px 20px; }
+  .br__name { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -.5px; }
+  .br__kind { font-size: 12px; opacity: .7; margin: 4px 0 14px; }
+  .br__meta { display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; }
+  .br__rating { background: var(--acc); color: #111; padding: 2px 8px; border: 2px solid var(--line); }
+
+  .br__foot { text-align: center; font-size: 12px; margin-top: 44px; border-top: 4px solid var(--line); padding-top: 18px; letter-spacing: 1px; }
+
+  @media (max-width: 860px) {
+    .br__hero { grid-template-columns: 1fr; }
+    .br__hero-title { padding: 28px 0; }
+    .br__hero-side { border-left: none; border-top: 4px solid var(--line); }
+    .br__grid { grid-template-columns: 1fr; }
+    .br__cart { display: none; }
+  }
+</style>

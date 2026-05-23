@@ -1,0 +1,87 @@
+---
+import GlassLayout from '~/layouts/GlassLayout.astro';
+import { STORES, menuFor, reviewsFor, ratingBreakdown, formatGs, priceLabel } from '~/data/stores.ts';
+import { u } from '~/lib/url.ts';
+
+export function getStaticPaths() {
+  return STORES.map((store) => ({ params: { id: store.id }, props: { store } }));
+}
+
+const { store } = Astro.props;
+const menu = menuFor(store);
+const reviews = reviewsFor(store);
+const bars = ratingBreakdown(store.rating);
+const stars = (n: number): string => '★'.repeat(n) + '☆'.repeat(5 - n);
+
+const facts = [
+  { b: store.isOpen ? '🟢 Abierto' : '🔴 Cerrado', s: store.isOpen ? 'hasta 23:00' : 'abre mañana' },
+  { b: `⚡ ${store.etaMin}–${store.etaMax} min`, s: 'tiempo estimado' },
+  { b: `🛵 ${formatGs(store.feeGs)}`, s: 'costo de envío' },
+  { b: `📍 ${store.distanceKm} km`, s: 'Villa Morra' },
+  ...(store.promo === undefined ? [] : [{ b: `🏷️ ${store.promo}`, s: 'promoción activa' }]),
+];
+---
+
+<GlassLayout title={store.name} backHref={u('/c/glass')}>
+  <div class:list={['gl__cover', `thumb--${store.thumb}`]}>{store.emoji}</div>
+
+  <div class="gl__store-head">
+    <span class="gl__store-logo">{store.emoji}</span>
+    <div class="gl__store-id">
+      <h1>{store.name}</h1>
+      <p>{store.cuisineLabel} · {priceLabel(store.price)} · ★ {store.rating} ({store.reviews})</p>
+    </div>
+  </div>
+
+  <div class="gl__stats">
+    {facts.map((f) => <div class="gl__stat"><b>{f.b}</b><span>{f.s}</span></div>)}
+  </div>
+
+  <div class="gl__detail-grid">
+    <section class="gl__panel">
+      <h2>Calificaciones y reseñas</h2>
+      <div class="gl__score">
+        <div style="text-align:center">
+          <div class="gl__score-big">{store.rating}</div>
+          <div class="gl__score-stars">★★★★★</div>
+          <span style="font-size:12.5px;color:var(--muted);font-weight:600">{store.reviews} reseñas</span>
+        </div>
+        <div class="gl__bars">
+          {bars.map((b) => (
+            <div class="gl__bar"><span>{b.star}</span><div class="track"><div class="fill" style={`width:${b.pct}%`}></div></div><span>{b.pct}%</span></div>
+          ))}
+        </div>
+      </div>
+
+      {reviews.map((r) => (
+        <div class="gl__review">
+          <span class:list={['gl__rev-ava', r.avatar]}>{r.initials}</span>
+          <div style="flex:1">
+            <div class="gl__rev-head"><h4>{r.name}</h4><span class="gl__rev-when">{r.when}</span></div>
+            <div class="gl__rev-stars">{stars(r.stars)}</div>
+            <p>{r.text}</p>
+            {r.photos.length > 0 && (
+              <div class="gl__rev-photos">{r.photos.map((p) => <span class:list={[`thumb--${p.thumb}`]}>{p.emoji}</span>)}</div>
+            )}
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <aside class="gl__panel gl__panel--sticky">
+      <h2>Menú · más pedidos</h2>
+      {menu.map((item) => (
+        <div class="gl__menu-item">
+          <div class:list={['gl__menu-img', `thumb--${item.thumb}`]}>{item.emoji}</div>
+          <div class="gl__menu-info">
+            <strong>{item.name}</strong>
+            <p>{item.desc}</p>
+            <div class="gl__menu-price">{formatGs(item.priceGs)}</div>
+          </div>
+          <glass-cart-add data-id={item.id} data-name={item.name} data-price={item.priceGs} data-emoji={item.emoji}></glass-cart-add>
+        </div>
+      ))}
+      <a class="gl__cta gl__checkout" href={u('/c/glass/carrito')} style="text-align:center">Ir al carrito 🛒</a>
+    </aside>
+  </div>
+</GlassLayout>

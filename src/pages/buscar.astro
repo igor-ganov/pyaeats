@@ -1,0 +1,103 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Topbar from '~/components/shell/Topbar.astro';
+import BottomNav from '~/components/shell/BottomNav.astro';
+import { u } from '~/lib/url.ts';
+
+const popular = ['🍕 Pizza', '🍣 Sushi', '🧀 Chipa', '🥩 Asado', '🌮 Tacos', '🍰 Postres', '🥗 Saludable'];
+const subcats = ['🍔 Hamburguesas', '🍟 Acompañamientos', '🥤 Bebidas', '🌭 Lomitos', '🍗 Pollo', '🥗 Ensaladas'];
+
+const results = [
+  { name: 'Burger House', rating: '4.8', meta: 'Hamburguesas', extra: '25–35 min', tags: ['🛵 Gratis', '$$', '2.1 km'], tag: { text: '-30%', kind: '' }, fav: '🤍' },
+  { name: 'Patio Burger', rating: '4.7', meta: 'Hamburguesas · Lomitos', extra: '20–30 min', tags: ['⚡ Express', '$', '1.3 km'], tag: { text: 'Envío gratis', kind: 'free' }, fav: '❤️' },
+  { name: 'Smash Co.', rating: '4.9', meta: 'Smash burgers', extra: '30–40 min', tags: ['⭐ Top', '$$$', '3.0 km'], fav: '🤍' },
+  { name: 'La Esquina', rating: '4.3', meta: 'Comida rápida', extra: '25–35 min', tags: ['🏷️ 2x1', '$', '0.9 km'], tag: { text: '2x1', kind: '' }, fav: '🤍' },
+];
+---
+
+<BaseLayout title="Buscar por tipo de comida">
+  <Topbar slot="topbar" query="hamburguesa" placeholder="Buscar…" />
+
+  <div class="shell page">
+    <section class="search-hero">
+      <h1 style="font-size:26px">Buscar por tipo de comida</h1>
+      <label class="big-search">
+        🔎 <input type="search" value="hamburguesa" placeholder="¿Qué quieres comer hoy?" />
+        <button class="btn btn--primary">Buscar</button>
+      </label>
+      <div class="suggest">
+        <span class="muted" style="align-self:center;font-size:13px">Populares:</span>
+        {popular.map((p) => <button class="chip">{p}</button>)}
+      </div>
+    </section>
+
+    <div class="chips" style="margin-top:18px">
+      {subcats.map((s, i) => (
+        <button class:list={['chip', i === 0 ? 'chip--active' : '']}><span class="emoji">{s.split(' ')[0]}</span> {s.split(' ').slice(1).join(' ')}</button>
+      ))}
+    </div>
+
+    <div class="with-aside" style="margin-top:20px">
+      <aside class="aside">
+        <h3>Ordenar por</h3>
+        <label class="check"><input type="radio" name="sort" checked /> Relevancia</label>
+        <label class="check"><input type="radio" name="sort" /> Mejor valorados ⭐</label>
+        <label class="check"><input type="radio" name="sort" /> Tiempo de entrega ⚡</label>
+        <label class="check"><input type="radio" name="sort" /> Precio: menor a mayor</label>
+
+        <h3>Tiempo máx. de entrega</h3>
+        <input class="slider" type="range" min="15" max="60" value="40" />
+        <div class="between muted" style="font-size:12px"><span>15 min</span><span>40 min</span><span>60 min</span></div>
+
+        <h3>Precio</h3>
+        <div class="row-tags">
+          <button class="chip chip--active">$</button>
+          <button class="chip">$$</button>
+          <button class="chip">$$$</button>
+        </div>
+
+        <h3>Filtros</h3>
+        <label class="check"><input type="checkbox" checked /> 🛵 Envío gratis</label>
+        <label class="check"><input type="checkbox" /> 🏷️ Con promoción</label>
+        <label class="check"><input type="checkbox" /> ⚡ Express (&lt;25 min)</label>
+        <label class="check"><input type="checkbox" /> 🟢 Abierto ahora</label>
+        <label class="check"><input type="checkbox" /> 💳 Acepta tarjeta</label>
+
+        <h3>Tipo de cocina</h3>
+        <label class="check"><input type="checkbox" /> Paraguaya</label>
+        <label class="check"><input type="checkbox" /> Italiana</label>
+        <label class="check"><input type="checkbox" /> Japonesa</label>
+        <label class="check"><input type="checkbox" /> Mexicana</label>
+        <label class="check"><input type="checkbox" /> Vegetariana</label>
+      </aside>
+
+      <section>
+        <div class="between" style="margin-bottom:14px">
+          <strong>48 resultados para “hamburguesa”</strong>
+          <span class="muted" style="font-size:13px">Cerca de Villa Morra</span>
+        </div>
+
+        <ul class="grid grid--stores">
+          {results.map((s) => (
+            <li><a href={u('/tienda')} class="card">
+              <div class="thumb thumb--burger">
+                🍔
+                {s.tag && <span class:list={['tag', s.tag.kind === 'free' ? 'tag--free' : '']}>{s.tag.text}</span>}
+                <span class="fav">{s.fav}</span>
+              </div>
+              <div class="card__body">
+                <div class="card__title">{s.name} <span class="rating"><span class="star">★</span> {s.rating}</span></div>
+                <div class="card__meta">{s.meta} <span class="dot">{s.extra}</span></div>
+                <div class="card__tags">{s.tags.map((t) => <span class="mini-tag">{t}</span>)}</div>
+              </div>
+            </a></li>
+          ))}
+        </ul>
+
+        <p class="note">Maqueta PyaEats · Pantalla 2 de 5 — Búsqueda por tipo de comida</p>
+      </section>
+    </div>
+  </div>
+
+  <BottomNav slot="footer" current="buscar" />
+</BaseLayout>

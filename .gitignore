@@ -1,0 +1,22 @@
+# build & deps
+dist/
+.astro/
+node_modules/
+
+# logs / OS
+*.log
+.DS_Store
+Thumbs.db
+
+# editor/local tooling
+.vscode/
+.idea/
+.smoke/
+
+# env
+.env
+.env.*
+!.env.example
+
+# bun
+.bun/

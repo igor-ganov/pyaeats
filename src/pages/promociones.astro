@@ -1,0 +1,71 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Topbar from '~/components/shell/Topbar.astro';
+import BottomNav from '~/components/shell/BottomNav.astro';
+import { u } from '~/lib/url.ts';
+
+const filters = ['Todas', '🛵 Envío gratis', '🏷️ 2x1', '💸 Descuentos', '🎁 Combos', '🆕 Nuevas tiendas'];
+
+const featured = [
+  { cls: 'pc-1', em: '🍔', title: 'Burger House', off: '-30%', desc: 'En toda la carta · hoy hasta las 23:00', code: 'PYABURGER' },
+  { cls: 'pc-2', em: '🛵', title: 'Envío gratis', off: 'Gs. 0', desc: 'En pedidos desde Gs. 50.000', code: 'ENVIOYA' },
+  { cls: 'pc-3', em: '🍕', title: 'La Pizzería', off: '2x1', desc: 'Pizzas grandes · de lunes a jueves', code: 'PIZZA2X1' },
+];
+
+const more = [
+  { thumb: 'sushi', emoji: '🍣', name: 'Sakura Sushi', rating: '4.9', meta: 'Combos roll desde Gs. 45.000', tags: ['🏷️ -20%', 'Hasta 25/05'], tag: { text: '-20%', kind: '' } },
+  { thumb: 'chipa', emoji: '🧀', name: 'Chipa Barrero', rating: '4.7', meta: 'Docena de chipa + cocido', tags: ['🎁 Combo', '$'], tag: { text: 'Envío gratis', kind: 'free' } },
+  { thumb: 'asado', emoji: '🥩', name: 'Don Asador', rating: '4.5', meta: 'Parrillada para 2 personas', tags: ['🏷️ -25%', 'Fines de semana'], tag: { text: '-25%', kind: '' } },
+  { thumb: 'dessert', emoji: '🍰', name: 'Dulce Tentación', rating: '4.8', meta: 'Postres seleccionados', tags: ['🏷️ 2x1', '$$'], tag: { text: '2x1', kind: '' } },
+  { thumb: 'drink', emoji: '🥤', name: 'El Mexicano', rating: '4.4', meta: 'Bebida gratis con tu combo', tags: ['🎁 Regalo', '$$'], tag: { text: 'Gratis', kind: 'free' } },
+  { thumb: 'pizza', emoji: '🍕', name: 'Patio Burger', rating: '4.7', meta: 'Primer pedido con la app', tags: ['🆕 Nuevo', '$'], tag: { text: '-15%', kind: '' } },
+];
+---
+
+<BaseLayout title="Promociones">
+  <Topbar slot="topbar" placeholder="Buscar promociones…" />
+
+  <div class="shell page">
+    <section class="hero" style="background:linear-gradient(120deg,#e11d48,#ff5a1f)">
+      <h1>🔥 Promociones de la semana</h1>
+      <p>Descuentos, 2x1 y envíos gratis en tus tiendas favoritas de Paraguay.</p>
+      <a href="#destacadas" class="btn btn--primary btn--lg">Ver ofertas</a>
+    </section>
+
+    <div class="chips" style="margin-top:18px">
+      {filters.map((f, i) => <button class:list={['chip', i === 0 ? 'chip--active' : '']}>{f}</button>)}
+    </div>
+
+    <div class="section-head" id="destacadas"><h2>Destacadas</h2><a href="#">Términos y condiciones</a></div>
+    <ul class="grid grid--promos">
+      {featured.map((p) => (
+        <li class:list={['promo-card', p.cls]}>
+          <span class="pc-em">{p.em}</span>
+          <h3>{p.title}</h3><div class="pc-off">{p.off}</div>
+          <p>{p.desc}</p><span class="code">{p.code}</span>
+        </li>
+      ))}
+    </ul>
+
+    <div class="section-head"><h2>Más ofertas para ti</h2></div>
+    <ul class="grid grid--stores">
+      {more.map((s) => (
+        <li><a href={u('/tienda')} class="card">
+          <div class:list={['thumb', `thumb--${s.thumb}`]}>
+            {s.emoji}
+            <span class:list={['tag', s.tag.kind === 'free' ? 'tag--free' : '']}>{s.tag.text}</span>
+          </div>
+          <div class="card__body">
+            <div class="card__title">{s.name} <span class="rating"><span class="star">★</span> {s.rating}</span></div>
+            <div class="card__meta">{s.meta}</div>
+            <div class="card__tags">{s.tags.map((t) => <span class="mini-tag">{t}</span>)}</div>
+          </div>
+        </a></li>
+      ))}
+    </ul>
+
+    <p class="note">Maqueta PyaEats · Pantalla 3 de 5 — Promociones</p>
+  </div>
+
+  <BottomNav slot="footer" current="promos" />
+</BaseLayout>

@@ -1,0 +1,11 @@
+---
+import GlassLayout from '~/layouts/GlassLayout.astro';
+import { u } from '~/lib/url.ts';
+---
+
+<GlassLayout title="Carrito" backHref={u('/c/glass')}>
+  <div class="gl__cart-wrap">
+    <h1 class="gl__h2" style="margin:6px 0 16px">Tu carrito</h1>
+    <glass-cart-view></glass-cart-view>
+  </div>
+</GlassLayout>
