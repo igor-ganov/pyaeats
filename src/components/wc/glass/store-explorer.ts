@@ -91,15 +91,31 @@ class GlassStoreExplorer extends LightWebComponent {
   }
 
   protected override afterRender(): void {
+    this.addEventListener('click', this.markMorphSource, { capture: true });
     this.addEventListener('click', this.onClick);
     this.addEventListener('input', this.onInput);
     this.update();
   }
 
   public disconnectedCallback(): void {
+    this.removeEventListener('click', this.markMorphSource, { capture: true });
     this.removeEventListener('click', this.onClick);
     this.removeEventListener('input', this.onInput);
   }
+
+  /**
+   * Capture-phase: name the clicked card just-in-time so the browser can morph
+   * its bounding box into `.gl__cover` on the detail page (container transform).
+   * Only one element ever carries the name, so there is zero idle perf cost.
+   */
+  private readonly markMorphSource = (event: Event): void => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest('[data-fav]') !== null) return; // favourite toggle: not a navigation
+    const card = target.closest<HTMLElement>('.gl__card');
+    if (card === null) return;
+    card.style.setProperty('view-transition-name', 'card-expand');
+  };
 
   private readonly onInput = (event: Event): void => {
     const target = event.target;

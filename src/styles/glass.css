@@ -281,6 +281,26 @@ html[data-theme="dark"] .gl__fchip.is-on { background: rgba(255,255,255,.92); co
 .gl__add:active { transform: scale(.9); }
 .gl__step:active { transform: scale(.88); }
 
+/* =========================================================================
+   Container transform: clicked card → store-detail cover.
+   One shared `view-transition-name` set on click (only ever 1 element at a
+   time), so the perf cost is zero outside the animation itself.
+   ========================================================================= */
+::view-transition-group(card-expand) {
+  animation-duration: .42s;
+  animation-timing-function: cubic-bezier(.2, .7, .25, 1);
+}
+/* Card snapshot fades out fast; cover snapshot fades in a touch slower so the
+   morphing box is what the eye reads, not the cross-fade of contents. */
+::view-transition-old(card-expand) {
+  animation: card-expand-out .24s ease-out both;
+}
+::view-transition-new(card-expand) {
+  animation: card-expand-in .36s .06s ease-in-out both;
+}
+@keyframes card-expand-out { to { opacity: 0; } }
+@keyframes card-expand-in  { from { opacity: 0; } to { opacity: 1; } }
+
 /* ---------- responsive ---------- */
 @media (max-width: 980px) {
   .gl__grid { grid-template-columns: 1fr 1fr; }

@@ -23,7 +23,7 @@ const facts = [
 ---
 
 <GlassLayout title={store.name} backHref={u('/c/glass')}>
-  <div class:list={['gl__cover', `thumb--${store.thumb}`]}>{store.emoji}</div>
+  <div class:list={['gl__cover', `thumb--${store.thumb}`]} style="view-transition-name:card-expand">{store.emoji}</div>
 
   <div class="gl__store-head">
     <span class="gl__store-logo">{store.emoji}</span>
