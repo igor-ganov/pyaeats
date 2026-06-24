@@ -61,6 +61,14 @@
 | **25** | Документация, ADR, runbook'и | Docs | **[AUTO]** | — | непрерывно |
 | **26** | Wrangler deploys на pyaserv.com | DevOps | **[AUTO]** (доступ уже настроен) | — | непрерывно |
 | **27** | Финальное ревью / приёмка / merge в main | Review | **[USER]** | каждый PR | непрерывно |
+| **28** | Утверждение копирайта T1-T3 туров (испанский voseo) | Content | **[USER]** | Sprint 1 | до Sprint 1 |
+| **29** | Утверждение списка features для /docs/ MVP (топ-5) | Content | **[USER]** | Sprint 3 | до Sprint 3 |
+| **30** | Запись GIF'ов для /docs/ — Playwright recordings | Content | **[HYBRID]** — я записываю, ты ревьюишь визуальное качество | Sprint 3 | Sprint 3 |
+| **31** | Черновики release notes для каждой версии | Content | **[HYBRID]** — я генерирую draft, ты editing pass | непрерывно | непрерывно |
+| **32** | Driver.js tour engine + T1 implementation | Code | **[AUTO]** | Sprint 1 | Sprint 1 |
+| **33** | Demo Mode infrastructure (`apiFetch` interception, sessionStorage, banner, visual treatment, 10 safety mechanisms) | Code | **[AUTO]** | Sprint 5 | Sprint 5 |
+| **34** | `/docs/` Astro Content Collections + Pagefind search | Code | **[AUTO]** | Sprint 3 | Sprint 3 |
+| **35** | `/releases/` index + per-release pages + RSS feed + login toast | Code | **[AUTO]** | Sprint 4 | Sprint 4 |
 
 ### Что я могу начать **прямо сейчас** без твоих решений
 
@@ -848,55 +856,64 @@ ClientRecord — см. 3.I
 - **[AUTO]** Seed-данные: 10 категорий, 30+ барриос Asunción, badge-list
 - **[HYBRID]** Парсер Clasipar (код от меня, запуск твой)
 
-### Sprint 1 (неделя 1–2) — Feature A + Profile Completeness
+### Sprint 1 (неделя 1–2) — Feature A + Profile Completeness + Tour T1
 
 - **[AUTO]** Feature A (Personal micro-page) — full implementation
 - **[AUTO]** Profile Completeness bar + 8 шагов + endowed-progress start at 20%
 - **[AUTO]** WA verification (code, ждёт твой WA Business в Sprint 0)
 - **[AUTO]** WhatsApp deep-linking + auto-message templates
 - **[AUTO]** Public price ranges (UI + storage)
+- **[AUTO]** **Feature K — Driver.js engine + T1 «Tu primer perfil» tour (7 шагов)** + `user_tours_completed` миграция
+- **[USER]** Утвердить копирайт T1 (раздел 14.3)
 - **[USER]** Ручной outreach 30 DM/день
 
-### Sprint 2 — Feature G (Badges) + Trust + Barrio filter
+### Sprint 2 — Feature G (Badges) + Trust + Barrio filter + Tours T2/T3
 
 - **[AUTO]** Badge engine + первый комплект 15 badges (milestone + collection + tier)
 - **[AUTO]** Структурированные отзывы с фото
 - **[AUTO]** Barrio service-area filter
 - **[AUTO]** Share-completed-job петля (вторая часть recap-card generator)
+- **[AUTO]** **T2 «Publicá tu primer servicio» (5 шагов) + T3 «Compartí tu perfil» (3 шага)**
 - **[USER]** Partnership #1
 
-### Sprint 3 — Feature B (Analytics) + SEO + Recap-card
+### Sprint 3 — Feature B (Analytics) + SEO + Recap-card + Docs MVP
 
 - **[AUTO]** Analytics dashboard
 - **[AUTO]** Recap-card generator (Sunday recap + manual trigger)
 - **[AUTO]** Hyperlocal SEO landing pages (~150 страниц auto-gen)
 - **[AUTO]** Sitemap + GSC integration
+- **[AUTO]** **Feature M — /docs/ MVP: Astro Content Collections + Pagefind search + 5 первых feature pages** (perfil, cotizaciones, insignias, análisis, tours)
+- **[HYBRID]** **Запись 5 GIF'ов** через Playwright + ffmpeg (я записываю, ты ревьюишь)
 - **[USER]** Реферальная программа (бизнес-логика готова, ты решаешь параметры)
 
-### Sprint 4 — Feature E (Quotes) + XP/Levels + Streaks + Quests
+### Sprint 4 — Feature E (Quotes) + XP/Levels + Streaks + Quests + Releases
 
 - **[AUTO]** Quote-builder (templates + PDF + WA send)
 - **[AUTO]** XP engine + tier levels
 - **[AUTO]** Streak engine + auto-freeze + pause
 - **[AUTO]** Quests (daily/weekly) + auto-rotation
 - **[AUTO]** Weekly recap modal
+- **[AUTO]** **/releases/ scaffold + RSS + login-toast + первые 2 release entries** (Foundation, Sprint 1)
 - **[USER]** Partnership #2 / influencer outreach
 
-### Sprint 5 — Monetization infra + Feature I (Lite-CRM)
+### Sprint 5 — Monetization infra + Feature I (Lite-CRM) + Demo Mode infrastructure
 
 - **[AUTO]** Pagopar SDK интеграция (sandbox)
 - **[HYBRID]** SIFEN-helper UI placeholder + код (ждёт юр. подтверждение)
 - **[AUTO]** Lead-counter UI + soft cap notification
 - **[AUTO]** Lite-CRM (Feature I)
 - **[AUTO]** Feature F (Lead-filters)
+- **[AUTO]** **Feature L — Demo Mode infrastructure**: 10 safety mechanisms, `apiFetch` interception layer, sessionStorage state, sticky banner, visual treatment, auto-exit, exit modal
+- **[AUTO]** **D1 — Demo Profile** (`/demo/profile`) с pre-populated «Demo: Juan Pérez»
 - **[USER]** Финал юр. consultation + цены
 
-### Sprint 6 — Paid tier ON + Feature H (multilingual) + survey
+### Sprint 6 — Paid tier ON + Feature H (multilingual) + survey + Demos D2/D3
 
 - **[AUTO]** Cap-trigger включён для >10 inquiries/мес
 - **[AUTO]** Платный тариф через Pagopar (Bancard карта + Tigo Money + Personal + Zimple)
 - **[HYBRID]** SIFEN-helper turn-on (если юр. зелёный свет)
 - **[AUTO]** Feature H — multilingual fields + hreflang
+- **[AUTO]** **D2 — Demo Quote Builder + D3 — Demo Analytics**
 - **[HYBRID]** First-party survey 30-50 клиентов
 - **[AUTO]** Dashboard платных конверсий
 
@@ -1332,6 +1349,447 @@ Search result row:
 
 ---
 
+## 14. Feature K — Onboarding Tour (interactive guidance)
+
+**Зависит от:** Driver.js (~5 KB gzipped, MIT) — lazy-loaded на роутах где tour запускается.
+**Спринт:** Sprint 1 (T1 «Tu primer perfil»). T2–T5 — Sprint 2+.
+
+### 14.1. Purpose
+
+Walk first-time specialists by the hand: signup → 100% profile → first listing → first share. Tour — это **endowed-progress accelerator**, доводящий специалиста с baseline 20% до 50%+ за один сеанс (≤10 минут).
+
+Жёсткие требования от пользователя 2026-06-24:
+- **Ведомый + конечный.** No open-ended exploration. Clear start, clear end.
+- **Skip-able at any step.** Никакого «trapped» ощущения.
+- **Re-launchable** из /docs/ или /me/ help menu (без повторной XP-награды).
+- Initial scope: **только startup (T1)**. T2-T5 — позже в спринтах.
+
+### 14.2. Tours catalog
+
+| Code | Name (es, voseo) | Trigger | Steps | XP | Badge |
+|---|---|---|---|---|---|
+| T1 | Tu primer perfil | First /me/ visit (no prior tour record) | 7 | +50 | `aprendiz_orientado` |
+| T2 | Publicá tu primer servicio | T1 done + 0 listings | 5 | +30 | `publicador` |
+| T3 | Compartí tu perfil | T2 done + profile ≥ 50% | 3 | +20 | `embajador_inicio` |
+| T4 | Configurá tu agenda | T1 done + empty schedule | 4 | +20 | TBD |
+| T5 | Cotizá rápido (Quote Builder) | After feature E ships | 6 | +30 | TBD |
+
+T4–T5 — Sprint 2+; список НЕ исчерпывающий.
+
+### 14.3. T1 — «Tu primer perfil» (7 шагов)
+
+| # | Anchor | Tooltip headline | Body (voseo) |
+|---|---|---|---|
+| 1 | `#avatar-upload` | Empezamos por tu cara | Una buena foto duplica las consultas. Sacate una con luz natural. |
+| 2 | `#cover-image` | Imagen de portada | Lo primero que ven los clientes. Una foto de tu trabajo o algo de tu rubro. |
+| 3 | `#bio-textarea` | Contales quién sos | 2-3 frases. Tu experiencia, herramientas, qué zonas cubrís. |
+| 4 | `#services-add` | ¿Qué servicios ofrecés? | Al menos dos, con precio aproximado. Los clientes odian «consultar por privado». |
+| 5 | `#service-area-selector` | Tu zona de trabajo | Elegí hasta 8 barrios. Los más cercanos primero. |
+| 6 | `#schedule-editor` | Tu horario | Cuándo respondés. Fuera de eso los clientes ven que estás cerrado y no se enojan. |
+| 7 | `#completeness-bar` | ¡Listo! | Tu perfil está en X %. Cada paso adicional sube tu visibilidad. ¡Tomá tu primer Boost! |
+
+Step 7 fires «Perfil Maestro» modal (см. 4.3) ТОЛЬКО при completion ≥ 100% к концу тура.
+
+### 14.4. State management
+
+```sql
+-- migration 0011_tours
+CREATE TABLE user_tours_completed (
+  user_id      TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  tour_code    TEXT NOT NULL,           -- 'T1', 'T2', ...
+  status       TEXT NOT NULL,           -- 'completed' | 'skipped'
+  completed_at INTEGER NOT NULL,
+  PRIMARY KEY (user_id, tour_code)
+);
+```
+
+Client cache:
+```
+localStorage:
+  pyaserv.tours.completed = ['T1']
+  pyaserv.tours.skipped   = ['T3']
+```
+
+Sync rules:
+- On login: GET /api/v1/me/tours → localStorage
+- On tour finish: POST /api/v1/me/tours { code, status } → both updated, DB источник правды
+- Single source of truth: DB; localStorage — кэш для off-line first
+
+### 14.5. Auto-launch rules
+
+```
+T1: first /me/ visit AND no T1 record AND profile_complete_pct < 100
+T2: /me/listings tab open AND T1 done AND 0 listings
+T3: /me/ visit AND T2 done AND profile_complete_pct ≥ 50
+```
+
+Throttle: **max 1 tour per session**. Если несколько eligible — самый старый в очереди первым.
+
+### 14.6. Mobile rendering
+
+- Spotlight через `clip-path: polygon(...)` cutout
+- Tooltip below anchor если есть место (≥ 200 px) else above
+- Controls sticky внизу: «Atrás · 3/7 · Siguiente»
+- Reduced-motion: no animations, instant transitions
+- Pinch-zoom не блокируется
+
+### 14.7. Wireframe — Tour step
+
+```
+┌─────────────────────────────┐
+│ pyaserv     [ES ▾]  [⚙]     │
+├─────────────────────────────┤
+│                             │
+│  ╔═══════════════════════╗  │  ← spotlight cutout
+│  ║  [cover image area]   ║  │
+│  ╚═══════════════════════╝  │
+│                             │
+│  ┌─────────────────────────┐│  ← tooltip
+│  │ Imagen de portada       ││
+│  │                         ││
+│  │ Lo primero que ven los  ││
+│  │ clientes. Una foto de tu││
+│  │ trabajo o algo del rubro││
+│  │                         ││
+│  │ Paso 2 de 7  ▌▌▌░░░░    ││
+│  └─────────────────────────┘│
+│ ┌───────────────────────────┐│
+│ │ Atrás · Saltar · Siguiente││
+│ └───────────────────────────┘│
+└─────────────────────────────┘
+```
+
+### 14.8. EARS criteria (Feature K)
+
+- **AC-K1**: WHEN first-time user opens `/me/` AND has no T1 record, THE SYSTEM SHALL launch T1 within 500 ms of page-load.
+- **AC-K2**: WHEN user clicks Skip at any step, THE SYSTEM SHALL persist completion status `'skipped'` and never auto-launch the same tour again.
+- **AC-K3**: WHEN user finishes a tour, THE SYSTEM SHALL grant matching quest reward AND persist `completed` AND grant matching badge.
+- **AC-K4**: THE SYSTEM SHALL respect `prefers-reduced-motion: reduce` (instant transitions, no auto-scroll).
+- **AC-K5**: WHEN user re-launches a completed tour from `/docs/`, THE SYSTEM SHALL replay it without re-rewarding.
+- **AC-K6**: THE SYSTEM SHALL never auto-launch more than 1 tour per session.
+
+---
+
+## 15. Feature L — Demo Mode (Safety-First Sandbox)
+
+**Зависит от:** Sprint 5+ infrastructure.
+**Доступ:** из /docs/ (anonymous) или /me/ → «Probar primero».
+**Главный design driver:** пользователь физически НЕ может перепутать demo с реальным профилем.
+
+### 15.1. Purpose
+
+Per-feature playground that lets visitors AND logged-in users experience functionality with zero risk to real data. Используется:
+- **Marketing** (anonymous из /docs/ → «Probar demo»)
+- **Re-discovery** (logged-in user хочет потрогать X до commit'а)
+- **Onboarding deepening** (после T-tour user практикуется в demo)
+
+### 15.2. Safety Charter — 10 anti-confusion mechanisms
+
+**Это ЗАКОН demo mode.** ВСЕ должны быть активны одновременно. Если хоть один сломан — demo НЕ запускается (fail-closed).
+
+| # | Mechanism | Implementation |
+|---|---|---|
+| 1 | **URL signal** | Route prefix `/demo/<feature-slug>`. Виден в browser bar. |
+| 2 | **Non-dismissible banner** | Orange (`#F59E0B`) sticky banner сверху: «MODO DEMO — los cambios no se guardan». Кнопка «Salir». **НЕ dismissible**. |
+| 3 | **Visual differentiation** | `<html data-demo-mode="1">` триггерит: subtle yellow tint via CSS filter, `border-top: 4px solid #F59E0B`, «DEMO» diagonal watermark на key components. |
+| 4 | **Mock data names** | Каждая сущность префикс `Demo:` (`Demo: Juan Pérez`, `Demo: Villa Morra Plomeros`). Phone fake (`+595 000 0000000`), email fake (`demo@ejemplo.com`). |
+| 5 | **Sandboxed state** | ВСЕ writes в `sessionStorage["pyaserv.demo.{feature}"]`. API calls перехватываются на `apiFetch` слое → canned responses из `apps/site/src/demo/stubs/*.ts`. **Ноль DB writes.** |
+| 6 | **Identity separation** | Demo рендерится LOGGED-OUT visually, даже если real session активна. Real avatar/имя НЕ показывается в demo UI нигде. |
+| 7 | **Exit confirmation** | «Salir» → modal «Volver a tu perfil real. Nada de lo que probaste se guarda.» с явной кнопкой confirm. |
+| 8 | **Auto-exit on idle** | 10 минут без активности → modal «Tu sesión demo terminó» → redirect `/docs/`. |
+| 9 | **No data import** | «Save» в demo → «¿Querés probar lo mismo en tu perfil real?» с линком, но **НЕ переносит данные**. |
+| 10 | **Audit log** | Client emits `analytics_event` `demo_started` / `demo_exited` / `demo_idle_timeout` для метрик (anonymized, no PII). |
+
+### 15.3. Demo flows MVP
+
+| Code | Feature | Sprint | Steps user can experience |
+|---|---|---|---|
+| D1 | Demo Profile | 5 | Edit avatar/cover/bio/services/areas; completeness bar; mock «Compartir mi perfil» |
+| D2 | Demo Quote Builder | 6 | Pick template, fill items, PDF preview, mock «Enviar por WhatsApp» |
+| D3 | Demo Analytics | 6 | Pre-populated metrics, hover sparklines, heatmap |
+
+### 15.4. State management
+
+```
+sessionStorage:
+  pyaserv.demo.profile         = { displayName: "Demo: Juan", ... }
+  pyaserv.demo.startedAt       = ISO timestamp
+  pyaserv.demo.lastActivity    = ISO timestamp
+
+Auto-exit loop:
+  on user input → update lastActivity
+  setInterval каждые 30 s: if now - lastActivity > 10 min → exit modal
+
+Cleanup:
+  on demo exit → delete pyaserv.demo.* keys
+  on 24 h TTL (next session) → also cleared
+```
+
+### 15.5. API interception layer
+
+В `src/lib/api.ts`:
+```ts
+const apiFetch = async (path: string, opts?: RequestInit) => {
+  if (location.pathname.startsWith('/demo/')) {
+    return demoStub(path, opts)  // canned response
+  }
+  // real fetch logic
+}
+```
+
+`demoStub` возвращает `Promise` с canned response, соответствующим schema real endpoint. Stubs в `apps/site/src/demo/stubs/*.ts`, по одному на endpoint.
+
+### 15.6. Wireframe — Demo banner + visual
+
+```
+┌─────────────────────────────────────────┐  ← orange border-top 4 px
+│ ⚠  MODO DEMO — los cambios no se guardan│  ← non-dismissible sticky banner
+│                                  [Salir]│
+├─────────────────────────────────────────┤
+│ pyaserv [ES ▾] [Iniciar]   (yellow tint applied to all UI)
+├─────────────────────────────────────────┤
+│ ┌─────────────────────────────────────┐ │
+│ │ [DEMO watermark diagonal background]│ │
+│ │                                     │ │
+│ │  ┌──┐  Demo: Juan Pérez             │ │
+│ │  │⬤│  [MAESTRO]  ★4.8               │ │
+│ │  └──┘  Plomero · Villa Morra        │ │
+│ │                                     │ │
+│ │  Perfil 60 % completo               │ │
+│ │  ███████████████░░░░░░░             │ │
+│ │  [Agregar foto] [Agregar servicio]  │ │
+│ └─────────────────────────────────────┘ │
+│                                         │
+│  ┌────────────────────────────────────┐ │
+│  │ 📱 Contactar por WhatsApp [DEMO]   │ │
+│  └────────────────────────────────────┘ │
+└─────────────────────────────────────────┘
+```
+
+Exit modal:
+
+```
+┌──────────────────────────────────────┐
+│                              [✕]     │
+│                                      │
+│   Volver a tu perfil real            │
+│   ─────────                          │
+│                                      │
+│   Nada de lo que probaste en el      │
+│   modo demo se guarda. Tu perfil     │
+│   real sigue como lo dejaste.        │
+│                                      │
+│   ┌────────────────────────────────┐ │
+│   │ Sí, volver a mi perfil         │ │
+│   └────────────────────────────────┘ │
+│   ┌────────────────────────────────┐ │
+│   │ Seguir en demo                 │ │
+│   └────────────────────────────────┘ │
+└──────────────────────────────────────┘
+```
+
+### 15.7. EARS criteria (Feature L)
+
+- **AC-L1**: WHEN demo route is entered, THE SYSTEM SHALL set `html[data-demo-mode="1"]` AND render persistent non-dismissible banner before first paint.
+- **AC-L2**: THE SYSTEM SHALL NEVER write to the database from any demo route — verified by integration test asserting zero D1 writes.
+- **AC-L3**: WHEN user has an active real session AND enters demo, THE SYSTEM SHALL render the demo as logged-out (real user identity NOT visible anywhere in demo UI).
+- **AC-L4**: WHEN user idles 10 minutes in demo, THE SYSTEM SHALL show idle modal AND auto-redirect to `/docs/` after user confirms or 30 s additional inactivity.
+- **AC-L5**: THE SYSTEM SHALL prefix every mock entity name with `Demo:` OR render with `DEMO` badge in the corner.
+- **AC-L6**: WHEN user clicks «Salir», THE SYSTEM SHALL show confirmation modal explaining nothing was saved.
+- **AC-L7**: THE SYSTEM SHALL NOT support any data import from demo to real profile (no «Save to real profile» button anywhere).
+- **AC-L8**: WHEN any of the 10 Safety Charter mechanisms cannot be enabled (e.g., CSS for banner failed to load), THE SYSTEM SHALL refuse to enter demo mode (fail-closed) AND show «Demo no disponible. Intentá de nuevo.».
+
+---
+
+## 16. Feature M — Documentation + Release Notes
+
+**Зависит от:** Sprint 3 (docs MVP, 5 страниц), Sprint 4 (release notes scaffold), Sprint 5+ (demo links activate).
+
+### 16.1. Purpose
+
+Public-facing operating manual. Single source of truth для «как работает X» + «что нового». SEO surface: каждая feature page индексируется.
+
+### 16.2. URL & file layout
+
+| URL | Source |
+|---|---|
+| `/docs/` | `src/content/docs/_index.md` — feature grid index |
+| `/docs/<slug>` | `src/content/docs/<slug>.md` |
+| `/releases/` | `src/content/releases/_index.md` — chronological list |
+| `/releases/<date>-<slug>` | `src/content/releases/<date>-<slug>.md` |
+| `/releases/rss.xml` | Auto через `@astrojs/rss` |
+
+**Astro Content Collections** — frontmatter validated by Zod schema, type-safe rendering.
+
+### 16.3. Per-feature page structure
+
+```yaml
+---
+title: "Tu perfil público"
+slug: perfil
+order: 1
+demoUrl: /demo/profile
+relaunchTour: T1
+gif: /docs/gifs/perfil.gif
+tags: [profile, sharing]
+updatedAt: 2026-06-24
+---
+
+## TL;DR
+Mostrá tu trabajo, tu zona, tu precio en una página propia.
+
+![GIF](/docs/gifs/perfil.gif)
+
+## ¿Qué incluye?
+- Foto + portada
+- Bio + servicios con precio
+- Zonas (hasta 8 barrios)
+- Horario
+- Galería de trabajos
+- Reseñas
+
+## Cómo usarlo
+1. ...
+
+[Probar demo →](/demo/profile)
+[Lanzar el tour →](#relaunch-tour=T1)
+
+## Preguntas frecuentes
+...
+```
+
+### 16.4. Per-release entry structure
+
+```yaml
+---
+title: "Spec v1 Foundation"
+version: v1.0.0
+date: 2026-06-24
+tags: [foundation, schema, i18n]
+authors: [igor]
+---
+
+## TL;DR
+Base de datos lista para todas las features de spec v1.
+
+## Nuevo
+### Idioma guaraní
+Ahora podés ver PyaServ con vocablos en guaraní en los lugares con
+emoción (CTAs, saludos). El resto sigue en español.
+![GIF](/docs/gifs/release-2026-06/gn-toggle.gif)
+
+### 40 barrios + distritos
+Asunción + Departamento Central catalogados. Tu perfil puede listar
+hasta 8 zonas de trabajo.
+[Ver lista completa →](/docs/zonas)
+
+## Mejorado
+…
+
+## Arreglado
+…
+
+## Próximamente
+- Tu perfil público (`/p/<tu-slug>`) — Sprint 1
+- Insignias y XP — Sprint 2
+
+[Suscribirme a las novedades →](#subscribe)
+```
+
+### 16.5. Search
+
+**Pagefind** (MIT, no external service):
+- Build hook: `pagefind --site dist` после `bun run build`
+- Static index в `dist/pagefind/`
+- Client: `<input id="search">` + `pagefind.search(query)`
+- Покрывает `/docs/` + `/releases/`
+- Полностью client-side, без БД
+
+### 16.6. Release subscription
+
+**1. Email digest (monthly)** — opt-in от /releases/ или /me/
+- Backend через `@pya-company/email`
+- Schedule: 1-е число месяца
+- Content: все releases за прошлый месяц, render из Markdown
+- Migration table:
+  ```
+  user_release_subscriptions(
+    user_id TEXT FK,
+    email TEXT,
+    last_sent_at INTEGER,
+    PRIMARY KEY (user_id)
+  )
+  ```
+
+**2. In-app toast on login** — automatic для logged-in
+- Track `users.last_seen_release_at` (timestamp)
+- On login: `releases.date > last_seen_release_at` → toast «Hay novedades. Ver release notes.» → `/releases/`
+- One toast per session
+
+### 16.7. GIF generation pipeline
+
+Self-recording через Playwright:
+
+```
+apps/site/scripts/record-docs-gifs.ts
+  - Opens /demo/<feature>
+  - Performs scripted user actions
+  - Page video recorded
+  - ffmpeg conversion: --filter "fps=15,scale=800:-1" → gif
+  - Output to public/docs/gifs/<feature>.gif (target < 2 MB)
+```
+
+Запуск **перед каждым release** или CI-job по schedule. GIFs commit'ятся в репо.
+
+### 16.8. Wireframe — /docs/ index
+
+```
+┌─────────────────────────────┐
+│ pyaserv [ES ▾] [Buscar 🔍]  │
+├─────────────────────────────┤
+│ Documentación               │
+│ ─────────                   │
+│ Cómo usar PyaServ + qué hay │
+│ de nuevo.                   │
+│                             │
+│ ┌─────────────────────────┐ │
+│ │ 🔍 Buscar en docs       │ │
+│ └─────────────────────────┘ │
+│                             │
+│ Features                    │
+│ ┌──────────┬──────────────┐ │
+│ │ Perfil   │ Cotizaciones │ │
+│ │ [GIF]    │ [GIF]        │ │
+│ │ Probar → │ Probar →     │ │
+│ ├──────────┼──────────────┤ │
+│ │ Insignias│ Análisis     │ │
+│ │ [GIF]    │ [GIF]        │ │
+│ │ Probar → │ Probar →     │ │
+│ ├──────────┼──────────────┤ │
+│ │ Tour     │ Compartir    │ │
+│ │ [GIF]    │ [GIF]        │ │
+│ │ Lanzar → │ Probar →     │ │
+│ └──────────┴──────────────┘ │
+│                             │
+│ Últimas novedades           │
+│ ─────────                   │
+│ • 2026-06-24 Spec v1…       │
+│ • 2026-06-10 Tab switch fix │
+│ [Ver todas →]               │
+└─────────────────────────────┘
+```
+
+### 16.9. EARS criteria (Feature M)
+
+- **AC-M1**: WHEN docs page loads, THE SYSTEM SHALL render LCP < 1.5 s (static + edge-cached) on simulated 3G+4× CPU.
+- **AC-M2**: THE SYSTEM SHALL include «Probar demo» CTA on each feature page that has a corresponding demo route.
+- **AC-M3**: Each release entry SHALL appear in RSS feed within 5 min of publication.
+- **AC-M4**: THE SYSTEM SHALL provide client-side search via Pagefind covering all docs + releases.
+- **AC-M5**: WHEN user logs in AND there are unread releases since `last_seen_release_at`, THE SYSTEM SHALL show one toast «Hay novedades» linking to `/releases/`.
+- **AC-M6**: THE SYSTEM SHALL allow tour re-launch from feature page (`#relaunch-tour=T1` hash) — same tour engine as section 14.
+
+---
+
 ## 11. Открытые вопросы
 
 ### Закрыто 2026-06-24
@@ -1341,6 +1799,7 @@ Search result row:
 - ~~Геймификация~~ → strong/soft asymmetry (раздел 2.4)
 - ~~Барриос seed list~~ → 40 areas зафиксированы (раздел 12)
 - ~~UI wireframes~~ → 7 ключевых экранов (раздел 13)
+- ~~Features K/L/M scope~~ → Tour (T1 в Sprint 1) + Docs (Sprint 3) + Demo Mode (Sprint 5+) (разделы 14, 15, 16)
 
 ### Открытые / асинхронные
 
@@ -1351,5 +1810,10 @@ Search result row:
 | O3 | Trade association partnerships (APEM / Colegio) | Human | Sprint 2 | [USER] |
 | O4 | Keyword volumes (Ahrefs / Keyword Planner) | Research | Sprint 2 | [HYBRID] |
 | O5 | Запуск парсера Clasipar — правовое OK | Legal | Sprint 0 | [USER] |
+| O7 | Финальный копирайт T1 туров (7 шагов на voseo) | Content | Sprint 1 | [USER] |
+| O8 | Стиль GIF'ов для /docs/: screen-only / с курсором / с face-cam | Design | Sprint 3 | [USER] |
+| O9 | Email-провайдер для release subscription digest (Resend / CF Email Routing / другое) | Infrastructure | Sprint 4 | [USER] |
+| O10 | Demo Mode visual strength — текущая спека = STRONG (banner + tint + watermark). Утвердить? | Design | Sprint 5 | [USER] |
+| O11 | Demo Mode access: только anonymous из /docs/ / только logged-in из /me/ / оба | Design | Sprint 5 | [USER] |
 
-**Стартовая блокировка снята.** Sprint 0 в работе.
+**Стартовая блокировка снята.** Sprint 0 закрыт (PR #24 ждёт review). Sprint 1 готов к запуску после merge.
