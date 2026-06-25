@@ -1812,6 +1812,309 @@ apps/site/scripts/record-docs-animations.ts
 
 ---
 
+## 17. Multi-language strategy — DE / EN / RU / ES первого класса (2026-06-25 PIVOT)
+
+**Контекст.** Изначальное предположение «Spanish-first для PY рынка» НЕВЕРНО. Реальная целевая аудитория PyaServ на первое время — **expat communities в Парагвае:** немецкая (исторически большая, Колониа Indep / Filadelfia / Asunción), англоговорящая (digital nomads, retirees, business), русскоговорящая (быстрорастущая community 2022+), плюс локальный испаноговорящий рынок. Все четыре языка — **равноправные**, без приоритета.
+
+### 17.1. Что меняется
+
+| Было | Стало |
+|---|---|
+| Default locale ES, fallback EN | Default = `navigator.language` round-robin fairness: DE/EN/RU/ES определяется первым `lang.startsWith()` совпадением; если нет — EN (нейтральный) |
+| Locale type `'es' \| 'en' \| 'gn'` | `'es' \| 'en' \| 'de' \| 'ru' \| 'gn'` — GN сдвинут с «equal» в **deferred** (нишевое culture-add, не блокер) |
+| GN был в Sprint 1 i18n inf | DE+RU **выходят** в Sprint 1 i18n инфра, базовые dict минимум nav+home+me/tabs+login |
+| Один lang-switch ES/EN | 4-button switch ES/EN/DE/RU + меню «Más idiomas» для GN |
+| ~150 hyperlocal SEO pages × 2 langs | × 4 langs = 600 страниц (hreflang генерируется автоматически) |
+| Tour copy — voseo only | Все 7 шагов T1 локализуются на 4 языка через i18n keys |
+| Email/push — испанский | Учитывают locale из user.locale (already in DB) |
+
+### 17.2. Implementation Tasks
+
+| # | Что | Sprint |
+|---|---|---|
+| ML-1 | Locale type → `'es' \| 'en' \| 'de' \| 'ru' \| 'gn'` + auto-detect rewrite (нейтрально) + 4-button switcher | Sprint 1 |
+| ML-2 | Base DE dictionary (~80 keys: nav/home/me/login/badges/quests) | Sprint 1 |
+| ML-3 | Base RU dictionary (~80 keys) | Sprint 1 |
+| ML-4 | Extend EN to 100% parity (сейчас baseline) | Sprint 1 |
+| ML-5 | Astro `i18n.locales` config: `['es', 'en', 'de', 'ru']`, no `prefixDefaultLocale` | Sprint 1 |
+| ML-6 | Per-specialist multilingual: extend Feature H spec — add `bio_de` / `bio_ru` / `headline_de` / `headline_ru` columns (migration 0013) | Sprint 2 |
+| ML-7 | `<link rel="alternate" hreflang>` на /p/`<slug>` и SEO landing pages — все 4 langs | Sprint 3 |
+| ML-8 | SEO landing pages × 4 langs (600 страниц total) | Sprint 3 |
+| ML-9 | Tour T1 copy на 4 langs | Sprint 1 |
+| ML-10 | Email + push notifications respect `user.locale` | Sprint 4 |
+
+### 17.3. EARS criteria
+
+- **AC-ML1**: WHEN any new visitor arrives, THE SYSTEM SHALL detect locale from `navigator.language` без bias на ES.
+- **AC-ML2**: THE SYSTEM SHALL render full UI in any of DE/EN/RU/ES без missing strings (fallback chain locale → EN → key; EN dict mandatory-complete).
+- **AC-ML3**: WHEN specialist creates profile, THE SYSTEM SHALL allow translation в любые DE/EN/RU/ES of `bio` + `headline`.
+- **AC-ML4**: WHEN visitor uses `?lang=de`, THE SYSTEM SHALL serve full DE site.
+- **AC-ML5**: SEO landing pages SHALL emit `hreflang` tags для всех 4 langs.
+
+---
+
+## 18. Mobile strategy — Tauri + WebView, single codebase (2026-06-25)
+
+### 18.1. Decision
+
+PyaServ mobile (iOS + Android) = **Tauri 2.0 mobile + WebView**, wrapping **the same web codebase**. NO React Native. NO Flutter. NO separate mobile app.
+
+### 18.2. Implications
+
+| Decision | Constraint |
+|---|---|
+| Single codebase | Все features (профиль, quote, badges, tours) работают идентично в browser и Tauri-mobile. |
+| WebView compat | Никаких Node.js-only API. Только browser APIs + Tauri command bridge for native (camera, share, push, file system). |
+| Build target | `apps/site` builds to static HTML/CSS/JS; `apps/mobile` (new) — Tauri shell wrapping `apps/site/dist`. |
+| Native APIs | Doorway через `@tauri-apps/api` — capture screen for share-card, push notifications, biometric для passkeys. |
+| Distribution | iOS App Store + Google Play (Tauri 2.0 mobile подходит). |
+
+### 18.3. Implementation Tasks (deferred to Sprint 7+)
+
+| # | Что | Sprint |
+|---|---|---|
+| TR-1 | Create `apps/mobile` workspace with Tauri 2.0 scaffold | 7 |
+| TR-2 | Tauri config — wrap `apps/site/dist` as WebView source | 7 |
+| TR-3 | iOS Xcode project + signing | 7 |
+| TR-4 | Android Gradle project + signing | 7 |
+| TR-5 | Push notifications via Tauri plugin → Pyaserv API | 8 |
+| TR-6 | Native share intent (Share to WhatsApp / Telegram) | 8 |
+| TR-7 | Biometric integration for passkey auth | 8 |
+| TR-8 | App Store submission | 9 |
+| TR-9 | Google Play submission | 9 |
+
+### 18.4. NON-goals
+
+- Никаких native-only screens. Все UI декларируется в Astro + WebView рендерит.
+- Никаких mobile-only features первое время. Web и mobile видят одно и то же.
+
+### 18.5. EARS
+
+- **AC-TR1**: THE SYSTEM SHALL ship a Tauri mobile build (iOS + Android) WITHOUT modifying `apps/site` source code beyond conditional Tauri-bridge calls (guarded with `typeof window.__TAURI__ !== 'undefined'`).
+- **AC-TR2**: WHEN web codebase is updated, THE SYSTEM SHALL build mobile from the same commit без divergence.
+
+---
+
+## 19. Local-first / Offline-first architecture (2026-06-25 — TOP PRIORITY INITIATIVE)
+
+### 19.1. Vision
+
+**Reference product:** Todoist mobile + web. Когда сеть пропадает:
+- Любая страница **открывается** (нет «cannot connect» errors)
+- Local cache рендерит последние known данные
+- Mutations (создание / правка) **queued** в IndexedDB
+- UI отображает **status indicator**: offline / syncing / synced / conflict
+- При reconnect — **automatic background sync** mutations к API
+- **Conflict resolution** интерактивная (показать diff, попросить выбор)
+
+Это **архитектурный sprint** на 4-6 недель. Не оптимизация — фундамент.
+
+### 19.2. Sub-features (как отдельные tickets)
+
+| # | Что | Sprint | Эффорт |
+|---|---|---|---|
+| OF-1 | **Service Worker offline shell** — precache `_app shell` HTML/CSS/JS, serve when offline, не показывать chrome errors | 7 | M |
+| OF-2 | **IndexedDB persistence layer** — таблицы `profiles_local`, `inquiries_local`, `messages_local`, `mutations_queue` | 7 | L |
+| OF-3 | **Mutation queue + sync engine** — каждый POST/PATCH сначала в queue + optimistic apply local, потом background sync to API | 7 | XL |
+| OF-4 | **Conflict resolution model** — Last-Write-Wins per field + manual resolution для critical (price, schedule) | 8 | L |
+| OF-5 | **UI status indicators** — global "offline" badge, per-row sync state (pending / syncing / synced / conflict / failed) | 8 | M |
+| OF-6 | **Background Sync API** — register sync events, retry с exponential backoff | 8 | M |
+| OF-7 | **Optimistic UI** — все писания моментально reflect в UI, queue tracks для rollback при API reject | 8 | L |
+| OF-8 | **Network status detection** — `navigator.onLine` + periodic ping `/health`, не bait into false-positive | 8 | S |
+| OF-9 | **Comprehensive E2E test suite** — 50+ сценариев Playwright: offline navigate, offline create profile, offline send message, conflict on parallel edit, sync after 24h offline, etc. | 8-9 | XL |
+| OF-10 | **Documentation + user-facing help** — `/docs/offline` объясняющая что работает offline и почему | 9 | S |
+
+### 19.3. Architecture decisions
+
+```
+┌─ Browser ────────────────────────────────────────┐
+│                                                  │
+│  UI Components                                   │
+│    ↕  (always read local first)                 │
+│  Local Data Layer (IndexedDB via idb-keyval)    │
+│    ↕                                             │
+│  Mutation Queue (IndexedDB)                     │
+│    ↕  (background sync)                         │
+│  Sync Engine                                    │
+│    ↓ (when online)                              │
+│  apiFetch — adds optimistic + queues if offline │
+│                                                  │
+└──────────────────────────────────────────────────┘
+                    ↓ HTTPS
+        ┌─── api.pyaserv.com ───┐
+        │  CF Worker + D1 + KV  │
+        └───────────────────────┘
+```
+
+**Conflict resolution model:**
+- Per-field LWW (Last-Write-Wins) by server timestamp для большинства полей
+- Manual resolution для критичных: `price`, `schedule`, `services` — показать diff modal с «оставить локальное / принять серверное / merge»
+- Operation log per entity для audit
+
+**Mutation queue schema:**
+```typescript
+interface QueuedMutation {
+  readonly id: string                  // uuid
+  readonly entityType: 'profile' | 'inquiry' | 'message' | 'quote' | 'client_record'
+  readonly entityId: string
+  readonly method: 'POST' | 'PATCH' | 'DELETE'
+  readonly path: string                // /v1/me/profile-extended
+  readonly body: unknown
+  readonly createdAt: number
+  readonly retryCount: number
+  readonly lastError?: string
+  readonly status: 'pending' | 'syncing' | 'synced' | 'failed' | 'conflict'
+}
+```
+
+### 19.4. Reference behavior (Todoist comparison)
+
+| Scenario | Todoist | PyaServ target |
+|---|---|---|
+| Open app offline | ✓ Shows cached data | ✓ Same |
+| Create task offline | ✓ Stored locally, syncs later | ✓ Create profile / inquiry / quote offline |
+| Edit task offline | ✓ Edits queue, applied on reconnect | ✓ Same |
+| Two devices edit same task | ✓ LWW + notification | ✓ Same |
+| 24h offline → reconnect | ✓ Batch sync, no data loss | ✓ Same |
+| Offline + low storage | ✓ Graceful degradation | ✓ Same |
+
+### 19.5. Test suite requirements (OF-9 detail)
+
+E2E tests via Playwright + `context.setOffline(true)`:
+
+1. Offline navigate /me/, /docs/, /demo/profile, /servicios/ — все 200 from SW cache
+2. Offline create profile → queue → reconnect → sync → server has it
+3. Offline edit profile, parallel server edit by another device → reconnect → conflict modal
+4. Offline send message in inquiry → optimistic show → reconnect → confirmed
+5. Offline create quote → reconnect → PDF still generated from local data
+6. Network flaky (intermittent 50% loss) → sync engine survives
+7. Offline 7 days → reconnect → batch sync all 50 queued mutations
+8. Mutation fails server-side validation → user notified, can fix locally
+9. Cache eviction at storage limit — only ancient + synced entries evicted
+10. Multiple browser tabs concurrent writes → single source of truth in IndexedDB
+
+### 19.6. EARS
+
+- **AC-OF1**: WHEN client loses network connectivity, THE SYSTEM SHALL continue rendering all UI from local cache without errors.
+- **AC-OF2**: WHEN user performs mutation offline, THE SYSTEM SHALL queue it locally AND apply optimistically to UI.
+- **AC-OF3**: WHEN connectivity returns, THE SYSTEM SHALL automatically sync queued mutations to API with exponential backoff on failures.
+- **AC-OF4**: WHEN server returns conflict (concurrent edit), THE SYSTEM SHALL show user-facing diff modal with manual resolution choices for critical fields.
+- **AC-OF5**: THE SYSTEM SHALL display network status indicator AND per-entity sync state AT ALL TIMES.
+- **AC-OF6**: WHEN mutation fails permanently (4xx after retries), THE SYSTEM SHALL notify user without data loss; mutation remains in queue marked `failed` with explain.
+- **AC-OF7**: E2E test suite SHALL include ≥ 50 offline / sync / conflict scenarios.
+
+### 19.7. Mobile (Tauri) reuse
+
+Все Local-first инфра работает в Tauri WebView идентично browser — same IndexedDB, same SW, same code. Native push wakes sync engine when app backgrounded.
+
+---
+
+## 20. Demo Mode v2 — same codebase + IntelliJ-style guidance (2026-06-25 REWRITE)
+
+### 20.1. Problem with v1
+
+Текущая реализация `/demo/profile`, `/demo/tour`, `/demo/badges`, `/demo/quote`, `/demo/analytics` — отдельные mock pages с inline HTML mockups. Это **дублирование кода** + **не передаёт реальный UX**. User'у видна не настоящая фича, а её reconstruction.
+
+### 20.2. New architecture (v2)
+
+```
+URL: /me/?demo=1&tour=T1   (any real page with ?demo=1)
+  ↓
+Layout: SAME as real (Base.astro)
+  ↓
+apiFetch interception: if URLSearchParams.has('demo') → return demoStub instead of real API call
+  ↓
+Tour overlay: spotlight (rest of page darkened) + tooltip + Next/Prev/Skip/Close
+  ↓
+Walk user through actual real-page elements step-by-step
+```
+
+### 20.3. IntelliJ-style guidance — design spec
+
+Reference: JetBrains IDEA «Help → Productivity Guide» + onboarding tour.
+
+| Element | Implementation |
+|---|---|
+| **Darken overlay** | Full-page `position:fixed; inset:0; background:rgba(0,0,0,0.6); pointer-events:none;` — клик НЕ блокируется |
+| **Spotlight cutout** | `clip-path: polygon(...)` или 4-side mask вокруг anchor element; элемент остаётся «highlighted» |
+| **Tooltip** | Absolute positioned относительно spotlight; top/bottom/left/right выбирается автоматом по доступному месту |
+| **Step navigation** | «Atrás» + step count «3/7» + «Saltar» + «Siguiente» — в нижней части tooltip |
+| **Sequential walk** | Click «Siguiente» → spotlight + tooltip перемещаются на следующий anchor, smooth animation (200 ms) |
+| **Click-to-progress** | Опционально: «Hacé click acá para continuar» — wait for actual click before advancing |
+| **Close button** | «×» в углу tooltip; close = skip tour |
+| **Restart** | Re-launch из help menu или `?tour=T1` query param |
+
+### 20.4. Components
+
+`apps/site/src/lib/guided-tour.ts`:
+```typescript
+interface TourStep {
+  readonly selector: string          // CSS selector for anchor
+  readonly title: string
+  readonly body: string
+  readonly position?: 'top'|'bottom'|'left'|'right'|'auto'
+  readonly waitForClick?: boolean    // если true — Next disabled пока user не кликнет anchor
+}
+
+interface TourConfig {
+  readonly code: string              // 'T1', 'T2', ...
+  readonly steps: ReadonlyArray<TourStep>
+  readonly onClose?: (reason: 'skip'|'finish') => void
+}
+
+export const startTour = (config: TourConfig): void => { /* ... */ }
+```
+
+`apps/site/src/components/GuidedTour.astro` — overlay markup + styles.
+
+`apps/site/src/lib/demo-data.ts` — canned data per entity (Demo: Juan Pérez profile, mock quotes, mock badges, etc).
+
+### 20.5. apiFetch interception
+
+В `apps/site/src/lib/api.ts`:
+```typescript
+const isDemoMode = (): boolean => {
+  if (typeof location === 'undefined') return false
+  return new URLSearchParams(location.search).has('demo')
+}
+
+export const apiFetch = async (path, opts) => {
+  if (isDemoMode()) {
+    const stub = await demoStub(path, opts)
+    if (stub !== null) return stub
+    // unrecognized path → still fall through to real fetch (read-only)
+  }
+  // ... existing logic
+}
+```
+
+`demoStub` returns object matching real API shape, or `null` if path не имеет demo data.
+
+### 20.6. Migration plan
+
+1. Delete `apps/site/src/pages/demo/profile.astro`, `tour.astro`, `badges.astro`, `quote.astro`, `analytics.astro`, `index.astro`.
+2. Delete `apps/site/src/layouts/DemoLayout.astro`.
+3. Keep `apps/site/src/lib/demo-mode.ts` infrastructure (banner, exit, idle) — adapt для overlay context.
+4. Build `apps/site/src/lib/guided-tour.ts` engine (IntelliJ-style, replace Driver.js).
+5. Build `apps/site/src/lib/demo-data.ts` stubs.
+6. Wire `apiFetch` interception.
+7. Update `/docs/` feature cards: «Probar demo →» links to `/me/?demo=1&tour=T1` style URLs.
+8. Tour T1 firing на /me/ для new specialists — reuse `guided-tour` engine.
+
+### 20.7. Safety Charter — упрощено
+
+Old 10 mechanisms list still applies (banner, tint, DEMO watermark, sandbox state, logged-out identity, etc) but now **applied on top of real pages**, не на mock pages. Mechanism 1 (URL signal) changes: `?demo=1` query param visible in URL.
+
+### 20.8. EARS
+
+- **AC-L2-1**: WHEN user adds `?demo=1` to any real route, THE SYSTEM SHALL apply Safety Charter visual treatment AND intercept all writes to be sandboxed.
+- **AC-L2-2**: WHEN demo tour is launched (`?tour=T1`), THE SYSTEM SHALL show darken-overlay-spotlight on each step, with Next/Prev/Skip/Close controls.
+- **AC-L2-3**: THE SYSTEM SHALL render real page components в demo, not separate mock pages.
+- **AC-L2-4**: WHEN user clicks Next, THE SYSTEM SHALL animate spotlight to next step's anchor element.
+- **AC-L2-5**: WHEN anchor element is off-screen, THE SYSTEM SHALL auto-scroll to it before highlighting.
+
+---
+
 ## 11. Открытые вопросы
 
 ### Закрыто 2026-06-24
